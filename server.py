@@ -23,6 +23,7 @@ def page_not_found(e):
 # 	print (url_for('login', next='/', other_param='hah'))
 # 	print (url_for('profile', username='John Doe'))
 
+
 if __name__ == '__main__':
     app.run(debug=True)
     # to make externally visible:
