@@ -17,12 +17,6 @@ def profile(username): pass
 def page_not_found(e):
     return render_template('404.html'), 404
 	
-# with app.test_request_context():
-# 	print (url_for('hello_world'))
-# 	print (url_for('login'))
-# 	print (url_for('login', next='/', other_param='hah'))
-# 	print (url_for('profile', username='John Doe'))
-
 if __name__ == '__main__':
     app.run(debug=True)
     # to make externally visible:
