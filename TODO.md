@@ -7,3 +7,4 @@
 - build out RSVP page 
 	- uses hash from URL param to pull from database 
 	- mark accordingly; save to DB
+    - build route - figure out how to pull params from the URL into python datatypes/primitives
