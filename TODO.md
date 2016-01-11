@@ -2,7 +2,11 @@
 - use `url_for` to generate unique urls for attendees
 	- have this feed into database
 - set up database
-	- build schema
+	- ~build schema~
+    - build create database method 
+        * pending refactor
+    - seed database with data
+        * build class/function for registration data
 - build form for people to fill out
 - build out RSVP page 
 	- uses hash from URL param to pull from database 
