@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="no-js">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Hackpsu Registration</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+  
+  <body>
+  <div class="container">
+    <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation" class="active"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#signin">Admin</a></li>
+      </ul>
+    </nav>
+    <h3 class="text-muted">Hackpsu Registration</h3>
+    </div>
+
+    <!-- There is no controller on this page yet. If you want one, make a div with ng-controller=MainController -->
+    <!-- Each template rendered in the ng-view is in its own controller -->
+    <div ng-view></div>
+
+  </div>
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="app.js"></script>
+  <script src="components/version/version-directive.js"></script>
+  <script src="components/version/interpolate-filter.js"></script>
+
+  <script src="components/home/home.js"></script>
+  <script src="components/signin/signin.js"></script>
+  <script src="components/signup/signup.js"></script>
+  <script src="components/version/version.js"></script>
+  <script src="components/students/students.js"></script>
+  
+</body>
+</html>

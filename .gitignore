@@ -1,2 +1,13 @@
+bower_components/
+logs/*
 ignore/
+node_modules/
+tmp/
+dist/
+build/
+*.egg-info/
 __pycache__
+.DS_Store
+.idea
+!.gitkeep
+setup.py
