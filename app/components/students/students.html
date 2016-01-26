@@ -5,26 +5,32 @@
     <form novalidate class="simple-form">
         <label for="first_name"> First Name/Friendly Name: </label><br/>
             <input type="text" id="first_name" ng-model="user.first_name" required/><br>
+        
         <label for="last_name"> Last Name/Family Name: </label><br>
             <input type="text" id="last_name" ng-model="user.last_name" required/><br>
+        
+        <!-- Need to handle the non-EDU stuff. Checkbox? Have them do something after? -->
         <label for="email"> Email (must be a .edu email): </label><br>
             <input type="email" id="email" ng-model="user.email" required/><br>
-            <!-- Need to handle the non-EDU stuff. Checkbox? Have them do something after? -->
             <input type="checkbox" id="no_edu" ng-model="user.no_edu"/>I don't have a .edu email<br>
-           <!--  <input type="email" id="no_edu" ng-model="user.no_edu"/><br> -->
-        <label for="cell"> Cell Phone: </label><br>
+            <!-- <input type="email" id="no_edu" ng-model="user.no_edu"/><br> -->
+
         <!-- How do we get it to auto-format like all the fancy sites? -->
+        <label for="cell"> Cell Phone: </label><br>
             <input type="number" id="cell" ng-model="user.cell" required/><br>
-        <label for="gender"> Gender: </label><br>
+        
         <!-- Should this be a radio button instead? -->
+        <label for="gender"> Gender: </label><br>
             <select name="gender" id="gender" ng-model="user.gender" required>
                 <option value="female">Female</option>
                 <option value="male">Male</option>
                 <option value="male">Transgender</option>
                 <option value="male">Androgynous</option>
             </select><br>   
+        
         <label for="age"> Age: </label><br>
             <input type="number" id="age" ng-model="user.age" min="10" max="130" required/><br>
+        
         <label for="year"> Year in School: </label><br>
             <select name="year" id="year" ng-model="user.year">
                 <option value="0">High School</option>
@@ -35,6 +41,7 @@
                 <option value="5">Fifth Year</option>
                 <option value="6">Graduate</option>
             </select><br>
+        
         <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply): </label><br>
             <select name="ethnicity" id="ethnicity" ng-model="user.ethnicity" multiple>
                 <option value="opt_out">I prefer not to answer</option>
@@ -47,6 +54,7 @@
                 <option value="native-american">Native American</option>
                 <option value="white">White/Caucasion</option>
             </select><br>
+        
         <label for="dietary"> Any Dietary Restrictions? (select all that apply): </label><br>
             <select name="dietary" id="dietary" ng-model="user.dietary" multiple>
                 <option value="asian">Vegan</option>
@@ -61,8 +69,9 @@
             </select><br>
             Other: 
             <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
-        <label for="shirt_size"> Shirt Size: </label><br>
+        
         <!-- Should this be a radio button instead? -->
+        <label for="shirt_size"> Shirt Size: </label><br>
             <select name="shirt_size" id="shirt_size" ng-model="user.shirt_size" multiple>
                 <option value="s">Small</option>
                 <option value="m">Medium</option>
@@ -78,7 +87,7 @@
         <label for="first"> First Hackathon? </label><br>
             <input type="radio" id="first" ng-model="user.first" value="yes"/>Yes<br>
             <input type="radio" id="first" ng-model="user.first" value="no"/>No<br>
-    
+    <!-- These are useless for now -->
     <input type="button" ng-click="reset()" value="Reset" />
     <input type="submit" ng-click="update(user)" value="Save" />
   </form>
