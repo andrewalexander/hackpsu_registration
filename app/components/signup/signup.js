@@ -3,12 +3,12 @@
 angular.module('myApp.signup', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/signup', {
+  $routeProvider.when('/signup/:id', {
     templateUrl: 'components/signup/signup.html',
     controller: 'SignUpCtrl'
   });
 }])
 
-.controller('SignUpCtrl', [function() { 
-    
+.controller('SignUpCtrl', ['$routeParams', function($routeParams) { 
+    console.log($routeParams.id)
 }]);

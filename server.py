@@ -21,7 +21,7 @@ def login(val):
     #     mimetype="application/json")
     return(tmp)
 
-@app.route('/user/<id>')
+@app.route('/user/<id>', methods=['GET', 'POST'])
 def profile(id): 
     tmp = jsonify({'value': id})
     return(tmp)

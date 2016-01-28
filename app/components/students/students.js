@@ -3,7 +3,7 @@
 app = angular.module('myApp.students', ['ngRoute', 'ngResource'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/students/:id', {
+  $routeProvider.when('/students', {
     templateUrl: 'components/students/students.html',
     controller: 'StudentsCtrl'
   });
@@ -37,7 +37,7 @@ app.controller('UsersCtrl', ['$scope', '$routeParams', 'Users', function($scope,
     $scope.send = function() {
         // First get a note object from the factory
         var user = Users.get({ id:$routeParams.id });
-        var $id = user.id;
+        var $id = 123454321;
 
         // Now call update passing in the ID first then the object you are updating
         Users.update({ id:$id }, user);    
