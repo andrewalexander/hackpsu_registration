@@ -57,15 +57,15 @@
         
         <label for="dietary"> Any Dietary Restrictions? (select all that apply): </label><br>
             <select name="dietary" id="dietary" ng-model="user.dietary" multiple>
-                <option value="asian">Vegan</option>
-                <option value="black">Vegetarian</option>
-                <option value="filipino">Pescetarian</option>
-                <option value="hawaiian">Peanut Allergy</option>
-                <option value="hispanic">Dairy Allergy/Lactose Intolerant</option>
-                <option value="other">Egg Allergy</option>
-                <option value="native-american">Gluten Allergy</option>
-                <option value="white">Kosher</option>
-                <option value="white">Halal</option>
+                <option value="vegan">Vegan</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="pescetarian">Pescetarian</option>
+                <option value="allergy_peanut">Peanut Allergy</option>
+                <option value="allergy_lactose">Dairy Allergy/Lactose Intolerant</option>
+                <option value="allergy_egg">Egg Allergy</option>
+                <option value="allergy_gluten">Gluten Allergy</option>
+                <option value="allergy_kosher">Kosher</option>
+                <option value="allergy_halal">Halal</option>
             </select><br>
             Other: 
             <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
@@ -87,10 +87,13 @@
         <label for="first"> First Hackathon? </label><br>
             <input type="radio" id="first" ng-model="user.first" value="yes"/>Yes<br>
             <input type="radio" id="first" ng-model="user.first" value="no"/>No<br>
-    <!-- These are useless for now -->
-    <input type="button" ng-click="reset()" value="Reset" />
-    <input type="submit" ng-click="update(user)" value="Save" />
+    
   </form>
   <pre>user = {{user | json}}</pre>
   <pre>master = {{master | json}}</pre>
+</div>
+<div ng-controller="UsersCtrl">
+    <input type="button" ng-click="reset()" value="Reset" />
+    <input type="submit" ng-click="update(user)" value="Save" />
+    <input type="submit" ng-click="send()" value="Send" />
 </div>
