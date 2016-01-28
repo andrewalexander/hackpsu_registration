@@ -25,7 +25,7 @@ app = angular.module('myApp.students', ['ngRoute', 'ngResource'])
 }]);
 
 app.factory('Users', ['$resource', function($resource) {
-return $resource('localhost:5000/users/:id', null,
+return $resource('http://54.210.83.129:5000/users/:id', null,
     {
         'update': { method:'PUT' }
     });
