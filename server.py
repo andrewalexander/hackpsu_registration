@@ -22,8 +22,9 @@ def login(val):
     return(tmp)
 
 @app.route('/user/<username>')
-def profile(username): pass
-
+def profile(username): 
+    tmp = jsonify({'value': val})
+    return(tmp)
 
 @app.route('/foo', methods=['GET', 'POST'])
 def foo():
