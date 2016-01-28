@@ -21,8 +21,6 @@
     "postinstall": "bower install",
 
     "prestart": "npm install",
-    "local": "http-server -a localhost -p 8000 -c-1",
-
     "start": "http-server -p 8000 -c-1",
 
     "pretest": "npm install",
