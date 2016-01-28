@@ -1,0 +1,19 @@
+{
+  "TableName": "test_hackpsu_table",
+  "KeySchema": [
+    {
+      "AttributeName": "AttendeeId",
+      "KeyType": "HASH"
+    }
+  ],
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "AttendeeId",
+      "AttributeType": "S"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  }
+}
