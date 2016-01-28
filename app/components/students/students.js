@@ -9,16 +9,16 @@ angular.module('myApp.students', ['ngRoute'])
   });
 }])
 
-.controller('StudentsCtrl', [function() { 
-    // $scope.master = {};
+.controller('StudentsCtrl', ['$scope', function($scope) { 
+    $scope.master = {};
 
-    // $scope.update = function(user) {
-    //     $scope.master = angular.copy(user);
-    // };
+    $scope.update = function(user) {
+        $scope.master = angular.copy(user);
+    };
 
-    // $scope.reset = function() {
-    //     $scope.user = angular.copy($scope.master);
-    // };
+    $scope.reset = function() {
+        $scope.user = angular.copy($scope.master);
+    };
 
-    // $scope.reset();
+    $scope.reset();
 }]);
