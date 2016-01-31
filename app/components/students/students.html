@@ -89,11 +89,12 @@
             <input type="radio" id="first" ng-model="user.first" value="no"/>No<br>
     
   </form>
+  <input type="button" ng-click="reset()" value="Reset" />
+  <input type="submit" ng-click="update(user)" value="Save" />
   <pre>user = {{user | json}}</pre>
   <pre>master = {{master | json}}</pre>
 </div>
 <div ng-controller="UsersCtrl">
-    <input type="button" ng-click="reset()" value="Reset" />
-    <input type="submit" ng-click="update(user)" value="Save" />
+    
     <input type="submit" ng-click="send()" value="Send" />
 </div>

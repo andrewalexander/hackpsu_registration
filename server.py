@@ -16,10 +16,8 @@ def index():
 def login(val):
     # val = flask.request.args.get('test')
     tmp = jsonify({'value': val})
-    # resp =  flask.Response(response=tmp,
-    #     status=200,
-    #     mimetype="application/json")
-    return(tmp)
+    resp =  flask.make_response((tmp, 200))
+    return resp
 
 @app.route('/user/<id>', methods=['GET', 'POST'])
 def profile(id): 
@@ -35,5 +33,3 @@ def foo():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-    # to make externally visible:
-    # app.run(host='0.0.0.0')
