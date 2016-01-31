@@ -1,19 +1,27 @@
 import boto3
 import json
 import wtforms_json
+import uuid
 from flask import Flask, render_template
 from botocore.exceptions import ClientError
 from wtforms import Form, BooleanField, StringField, IntegerField, FieldList, validators
 
+# instantiate our Flask app
 app = Flask(__name__)
 
+# build Config object
+class Config():
+    def __init__(self):
+        self.db_name = 'hackpsu_registration'
+        self.ethnicity_field = StringField('Ethnicity', [validators.Length(min=5, max=15), validators.Optional()])
+        self.dietary_field = StringField('Dietary restrictions', [validators.Length(min=5, max=15), validators.Optional()])
 
-ethnicity_field = StringField('Ethnicity', [validators.Length(min=5, max=15), validators.Optional()])
-dietary_field = StringField('Dietary restrictions', [validators.Length(min=5, max=15), validators.Optional()])
+# instantiate Config object
+config = Config()
 
-
+# define the WTForm for easy validation
 class RegistrationForm(Form):
-    first_name    = StringField('First Name', [validators.Length(min=2, max=25), validators.InputRequired()])
+    first_name   = StringField('First Name', [validators.Length(min=2, max=25), validators.InputRequired()])
     last_name    = StringField('Last Name', [validators.Length(min=2, max=25), validators.InputRequired()])
     email        = StringField('Email Address', [validators.Length(min=6, max=35), validators.InputRequired()])
     age          = IntegerField('Age', [validators.NumberRange(min=10, max=125), validators.InputRequired()])
@@ -23,19 +31,19 @@ class RegistrationForm(Form):
     reimbursement= BooleanField('Reimbursement needed', [validators.DataRequired()])
     no_edu       = BooleanField('No .edu email', [validators.Optional()])
     gender       = StringField('Gender', [validators.Optional()])
-    ethnicity    = FieldList(ethnicity_field)
-    dietary      = FieldList(dietary_field)
+    ethnicity    = FieldList(config.ethnicity_field)
+    dietary      = FieldList(config.dietary_field)
     other_dietary= StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
     first        = BooleanField('First hackathon', [validators.Optional()])
 
 def validate_registration_field(attendee):
+    
     wtforms_json.init()
 
     form = RegistrationForm.from_json(json.loads(attendee))
     if form.validate():
         return form
     else:
-        print 'invalid'
         return None
 
 
@@ -44,6 +52,13 @@ def config_db():
 
 
 def get_attendees(max_items='25'):
+    pass
+
+
+# handling user on the rsvp URL
+# assume params will be stripped from request URL
+def get_attendee_from_db(params):
+    attendee_id = params.attendee_id
     pass
 
 
@@ -64,6 +79,12 @@ def send_alerts(sns_topic):
 
 
 def add_new_attendee(attendee):
+    config = Config()
+
+    # generate a unique hash/uuid:
+    user_id = uuid.uuid3(uuid.NAMESPACE_DNS, str(attendee.email.data))
+
+    # build the db entry
     new_attendee = {'first_name': attendee.first_name.data,
     'last_name': attendee.last_name.data,
     'email': attendee.email.data,
@@ -77,9 +98,21 @@ def add_new_attendee(attendee):
     'ethnicity': attendee.ethnicity.data,
     'dietary': attendee.dietary.data,
     'other_dietary': attendee.other_dietary.data,
-    'first': attendee.first.data}
+    'first': attendee.first.data,
+    'user_id': str(user_id)}
 
-    print new_attendee
+    # get our db and put the new item in
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    try:
+        table = dynamodb.Table(config.db_name)
+        response = table.put_item(
+            Item=new_attendee
+        )    
+    except ClientError, e:
+        # TODO: put e in INFO logs
+        return None
+
+    return response
 
 
 def seed_db(db_name):
@@ -106,28 +139,20 @@ def seed_db(db_name):
                 TableName=db_name,
                 KeySchema=[
                     {
-                        'AttributeName': 'username',
+                        'AttributeName': 'email',
                         'KeyType': 'HASH'
-                    },
-                    {
-                        'AttributeName': 'last_name',
-                        'KeyType': 'RANGE'
                     }
                 ],
                 AttributeDefinitions=[
                     {
-                        'AttributeName': 'username',
+                        'AttributeName': 'email',
                         'AttributeType': 'S'
-                    },
-                    {
-                        'AttributeName': 'last_name',
-                        'AttributeType': 'S'
-                    },
+                    }
 
                 ],
                 ProvisionedThroughput={
-                    'ReadCapacityUnits': 5,
-                    'WriteCapacityUnits': 5
+                    'ReadCapacityUnits': 1,
+                    'WriteCapacityUnits': 1
                 }
             )
         else:
@@ -139,13 +164,5 @@ def seed_db(db_name):
     
     except ClientError as e:
         raise e
-    
 
     return table
-
-
-# handling user on the rsvp URL
-# assume params will be stripped from request URL
-def get_attendee_from_db(params):
-    attendee_id = params.attendee_id
-    pass
