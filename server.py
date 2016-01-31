@@ -1,5 +1,7 @@
 import flask
-from flask import Flask, render_template, jsonify
+import json
+import scripts
+from flask import Flask, render_template, jsonify, request
 from flask.ext.cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -9,7 +11,7 @@ CORS(app)
 def index():
     val = flask.request.args
     # return val
-    # return render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route('/login/<val>', methods=['GET'])
@@ -19,16 +21,31 @@ def login(val):
     resp =  flask.make_response((tmp, 200))
     return resp
 
-@app.route('/user/<id>', methods=['GET', 'POST'])
-def profile(id): 
-    tmp = jsonify({'value': id})
-    return(tmp)
+@app.route('/api/users/')
+@app.route('/api/users/<id>/')
+def profile(id = None): 
+    if id:
+        # get specified user
+        tmp = jsonify({'response': id})
+        
+    else:
+        # get all users from database
+        tmp = jsonify({'response': 'This will eventually get the users that are registered'})
 
-@app.route('/foo', methods=['GET', 'POST'])
-def foo():
-    # do something to send email
-    
-    return flask.jsonify(**tmp)
+    resp = flask.make_response(tmp, 200)
+    return resp
+
+@app.route('/api/submit/', methods = ['POST'])
+def submit(): 
+    if request.method == 'POST':
+        # create new user in database
+        form = scripts.validate_registration_field(request.data)
+    if form:
+        scripts.add_new_attendee(form)
+
+    tmp = jsonify({'response': 200})
+    resp = flask.make_response(tmp, 200)
+    return resp
 
 
 if __name__ == '__main__':

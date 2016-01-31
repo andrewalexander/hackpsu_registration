@@ -3,7 +3,6 @@
 // Declare app level module which depends on views, and components
 var app = angular.module('myApp', [
   'ngRoute',
-  'ngResource',
   'myApp.home',
   'myApp.version',
   'myApp.students',
@@ -12,9 +11,8 @@ var app = angular.module('myApp', [
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});
 }])
-.controller('MainController', function($scope, $route, $routeParams, $location, $resource) {
+.controller('MainController', function($scope, $route, $routeParams, $location, $http) {
      $scope.$route = $route;
      $scope.$location = $location;
      $scope.$routeParams = $routeParams;
-     $scope.$resource = $resource;
  });
