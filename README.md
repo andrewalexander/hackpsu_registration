@@ -2,6 +2,15 @@
 
 This application is built from [angular-seed](https://github.com/angular/angular-seed) for the front-end and [Flask](http://flask.pocoo.org/) for the REST backend.
 
+# TL;DR (if you have pre-reqs):
+```
+git clone https://github.com/andrewalexander/hackpsu_registration.git
+npm install
+python -m SimpleHTTPServer &
+pip install -r requirements.txt
+python server.py &
+```
+
 # Prerequisites
 - Install [node.js](https://nodejs.org/en/download/) (do it all.... you want everything)
 - Install [pip](https://pip.pypa.io/en/stable/installing/)
