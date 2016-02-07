@@ -28,7 +28,7 @@ app.factory('userFactory', ['$http', function($http) {
     };
     userFactory.submitUser = function (user) {
         console.log('incoming user: '+ JSON.stringify(user))
-        return $http.post(urlBase + 'submit/', JSON.stringify(user), config);
+        return $http.post(urlBase + 'submit', JSON.stringify(user), config);
     };
 // return $resource('localhost:5000/users/:id', null,
 //     {
