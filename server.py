@@ -30,9 +30,13 @@ def profile(id = None):
         
     else:
         # get all users from database
-        tmp = jsonify({'response': 'This will eventually get the users that are registered'})
-
-    resp = flask.make_response(tmp, 200)
+        all_users = scripts.get_attendees()
+        if all_users:
+            tmp = jsonify(all_users)
+            resp = flask.make_response(tmp, 200)
+        else:
+            tmp = jsonify({'error': 'Error communicating with database'})
+            resp = flask.make_response(tmp, 500)
     return resp
 
 @app.route('/api/submit', methods = ['POST'])

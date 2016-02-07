@@ -51,13 +51,39 @@ def config_db():
     pass
 
 
-def get_attendees(max_items='25'):
-    pass
+def get_attendees():
+    client = None
+    client = boto3.client('dynamodb')
+    all_users = []
+
+    response = client.scan(
+        TableName=config.db_name
+    )
+    if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
+        for entry in response.get('Items'):
+            all_users.append({
+                'first_name': entry.get('first_name', {}).get('S', ''),
+                'last_name': entry.get('last_name', {}).get('S', ''),
+                'email': entry.get('email', {}).get('S', ''),
+                'age': entry.get('age', {}).get('N', ''),
+                'cell': entry.get('cell', {}).get('N', ''),
+                'year': entry.get('year', {}).get('N', ''),
+                'shirt_size': entry.get('shirt_size', {}).get('m', ''),
+                'reimbursement': entry.get('reimbursement', {}).get('BO, ''OL'),
+                'no_edu': entry.get('no_ed', {}).get('BOOL', ''),
+                'gender': entry.get('gender', {}).get('S', ''),
+                'ethnicity': [item.get('S') for item in entry.get('ethnicity', {}).get('L', '')],
+                'dietary': [item.get('S') for item in entry.get('dietary', {}).get('L', '')],
+                'other_dietary': entry.get('other_dietary', {}).get('S', '')
+                })
+        return all_users
+    else:
+        return None
 
 
 # handling user on the rsvp URL
 # assume params will be stripped from request URL
-def get_attendee_from_db(params):
+def get_attendee_from_db(attendee_id):
     attendee_id = params.attendee_id
     pass
 

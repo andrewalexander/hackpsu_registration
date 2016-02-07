@@ -82,8 +82,8 @@
                 <option value="4xl">4XL</option>
             </select><br>
         <label for="reimbursement"> Need Reimbursement? *</label><br>
-            <input type="radio" id="reimbursement" ng-model="user.reimbursement" data-ng-value="true" ng-required="!user.reimbursement"/>Yes<br>
-            <input type="radio" id="reimbursement" ng-model="user.reimbursement" data-ng-value="false" ng-required="!user.reimbursement"/>No<br>
+            <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/>Yes<br>
+            <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/>No<br>
         <label for="first"> First Hackathon? </label><br>
             <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes<br>
             <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No<br>
