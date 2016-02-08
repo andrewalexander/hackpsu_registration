@@ -41,7 +41,6 @@ def profile(id = None):
 
 @app.route('/api/submit', methods = ['POST'])
 def submit(): 
-    response = None
     if request.method == 'POST':
         # validate the form before we do anything else
         form = scripts.validate_registration_field(request.data)
@@ -56,6 +55,7 @@ def submit():
             tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
             resp = flask.make_response(tmp, 500)
     else:
+        print 'bad form'
         tmp = jsonify({'HTTPStatusCode': 400, 'message': 'ERROR: Invalid form'})
         resp = flask.make_response(tmp, 400)
     

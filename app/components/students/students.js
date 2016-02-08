@@ -16,7 +16,7 @@ app.factory('userFactory', ['$http', function($http) {
     var config = { 
         headers: 
         {
-            'Access-Control-Allow-Origin': True
+            'Access-Control-Allow-Origin': 'True'
         }
     };
 
