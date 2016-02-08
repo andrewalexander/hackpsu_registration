@@ -68,7 +68,7 @@ def get_attendees():
                 'age': entry.get('age', {}).get('N', ''),
                 'cell': entry.get('cell', {}).get('N', ''),
                 'year': entry.get('year', {}).get('N', ''),
-                'shirt_size': entry.get('shirt_size', {}).get('m', ''),
+                'shirt_size': entry.get('shirt_size', {}).get('S', ''),
                 'reimbursement': entry.get('reimbursement', {}).get('BOOL', ''),
                 'no_edu': entry.get('no_ed', {}).get('BOOL', ''),
                 'gender': entry.get('gender', {}).get('S', ''),
