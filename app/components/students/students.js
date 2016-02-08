@@ -24,7 +24,7 @@ app.factory('userFactory', ['$http', function($http) {
         return $http.get(urlBase + 'users/', config);
     };
     userFactory.getUser = function (id) {
-        return $http.get(urlBase + 'users/' + id, config);
+        return $http.get(urlBase + 'users/' + id + '/', config);
     };
     userFactory.submitUser = function (user) {
         console.log('incoming user: '+ JSON.stringify(user))
