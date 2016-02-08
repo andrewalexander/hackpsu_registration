@@ -137,6 +137,7 @@ def add_new_attendee(attendee):
         )    
     except ClientError, e:
         # TODO: put e in INFO logs
+        print e
         return None
 
     return response
