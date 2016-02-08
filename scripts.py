@@ -128,6 +128,10 @@ def add_new_attendee(attendee):
     'first': attendee.first.data,
     'user_id': str(user_id)}
 
+    for key, value in new_attendee.iteritems():
+        if not value:
+            new_attendee[key] = 'Null'
+
     # get our db and put the new item in
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     try:
