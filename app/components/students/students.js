@@ -11,7 +11,7 @@ app = angular.module('myApp.students', ['ngRoute'])
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://:5000/api/';
+    var urlBase = 'http://52.90.19.234:5000/api/';
     var userFactory = {};
     var config = { 
         headers: 
