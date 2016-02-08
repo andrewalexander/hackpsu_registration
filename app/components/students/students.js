@@ -2,7 +2,7 @@
 
 app = angular.module('myApp.students', ['ngRoute'])
 
-.config(['$routeProvider', function($routeProvider, $httpProvider) {
+.config(['$routeProvider', '$httpProvider' function($routeProvider, $httpProvider) {
   $routeProvider.when('/students', {
     templateUrl: 'components/students/students.html',
     controller: 'StudentsCtrl'
