@@ -2,22 +2,21 @@
 
 app = angular.module('myApp.students', ['ngRoute'])
 
-.config(['$routeProvider', '$httpProvider' function($routeProvider, $httpProvider) {
+.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/students', {
     templateUrl: 'components/students/students.html',
     controller: 'StudentsCtrl'
   });
-  $httpProvider.defaults.useXDomain = true;
 }]);
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://:5000/api/';
+    var urlBase = 'http://54.84.9.133:5000/api/';
     var userFactory = {};
     var config = { 
         headers: 
         {
-            'Access-Control-Allow-Origin': 'True'
+            'Access-Control-Allow-Origin': True
         }
     };
 
@@ -67,7 +66,7 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
      
         userFactory.getUsers()
         .success(function (custs) {
-            console.log('this: ' + JSON.stringify(custs));
+            console.log('users: ' + JSON.stringify(custs));
         })
         .error(function (error) {
             console.log('couldn\'t get all users');

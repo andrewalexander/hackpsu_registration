@@ -41,23 +41,25 @@ def profile(id = None):
 
 @app.route('/api/submit', methods = ['POST'])
 def submit(): 
+    response = None
     if request.method == 'POST':
         # validate the form before we do anything else
         form = scripts.validate_registration_field(request.data)
     if form:
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
+        # build response to database update
+        if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + form.email.data})
+            resp = flask.make_response(tmp, 200)
+        else:
+            tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
+            resp = flask.make_response(tmp, 500)
     else:
         tmp = jsonify({'HTTPStatusCode': 400, 'message': 'ERROR: Invalid form'})
         resp = flask.make_response(tmp, 400)
     
-    # build response to database update
-    if response.get('ResponseMetadata', {}).get('HTTPStatusCode', 404) == 200:
-        tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + form.email.data})
-        resp = flask.make_response(tmp, 200)
-    else:
-        tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
-        resp = flask.make_response(tmp, 500)
+    
     
     return resp
 

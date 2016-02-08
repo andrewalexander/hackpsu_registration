@@ -8,8 +8,9 @@ var app = angular.module('myApp', [
   'myApp.students',
   'myApp.signup'
 ])
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});
+  $httpProvider.defaults.useXDomain = true;
 }])
 .controller('MainController', function($scope, $route, $routeParams, $location, $http) {
      $scope.$route = $route;
