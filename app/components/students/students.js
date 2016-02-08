@@ -11,13 +11,13 @@ app = angular.module('myApp.students', ['ngRoute'])
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://127.0.0.1:5000/api/';
+    var urlBase = 'http://:5000/api/';
     var userFactory = {};
     var config = { 
-        // headers: 
-        // {
-        //     'Access-Control-Allow-Origin': 'True'
-        // }
+        headers: 
+        {
+            'Access-Control-Allow-Origin': 'True'
+        }
     };
 
     userFactory.getUsers = function () {

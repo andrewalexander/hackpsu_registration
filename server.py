@@ -52,8 +52,8 @@ def submit():
         resp = flask.make_response(tmp, 400)
     
     # build response to database update
-    if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
-        tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user '+form.email.data})
+    if response.get('ResponseMetadata', {}).get('HTTPStatusCode', 404) == 200:
+        tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + form.email.data})
         resp = flask.make_response(tmp, 200)
     else:
         tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
