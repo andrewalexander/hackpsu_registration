@@ -4,7 +4,7 @@ import scripts
 from flask import Flask, render_template, jsonify, request
 from flask.ext.cors import CORS
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources=r'/api/*', allow_headers='Content-Type')
 
 
 @app.route('/')
