@@ -69,7 +69,7 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
             console.log('users: ' + JSON.stringify(custs));
         })
         .error(function (error) {
-            console.log('couldn\'t get all users');
+            console.log('couldn\'t get all users: ' + JSON.stringify(error));
         });
      
         userFactory.submitUser($scope.user)
@@ -77,7 +77,7 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
             console.log('this: ' + JSON.stringify(custs));
         })
         .error(function (error) {
-            console.log('couldn\'t submit user');
+            console.log('Bad request: ' + JSON.stringify(error));
         });
     };
 }]);

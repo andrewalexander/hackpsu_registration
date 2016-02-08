@@ -27,7 +27,7 @@ class RegistrationForm(Form):
     age          = IntegerField('Age', [validators.NumberRange(min=10, max=125), validators.InputRequired()])
     cell         = IntegerField('Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
     year         = IntegerField('Year in school', [validators.NumberRange(min=0, max=6), validators.InputRequired()])
-    shirt_size   = StringField('Shirt Size', [validators.Length(min=1, max=1), validators.InputRequired()])
+    shirt_size   = StringField('Shirt Size', [validators.Length(min=1, max=4), validators.InputRequired()])
     reimbursement= BooleanField('Reimbursement needed', [validators.DataRequired()])
     no_edu       = BooleanField('No .edu email', [validators.Optional()])
     gender       = StringField('Gender', [validators.Optional()])
@@ -41,6 +41,7 @@ def validate_registration_field(attendee):
     wtforms_json.init()
 
     form = RegistrationForm.from_json(json.loads(attendee))
+    print attendee
     if form.validate():
         return form
     else:
