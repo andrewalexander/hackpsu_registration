@@ -21,12 +21,13 @@ def login(val):
     resp =  flask.make_response((tmp, 200))
     return resp
 
-@app.route('/api/users/')
-@app.route('/api/users/<id>/')
+@app.route('/api/users/', methods=['GET'])
+@app.route('/api/users/<id>/', methods=['GET'])
 def profile(id = None): 
     if id:
         # get specified user
         tmp = jsonify({'response': id})
+        resp = flask.make_response(tmp, 200)
         
     else:
         # get all users from database
