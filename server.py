@@ -49,7 +49,7 @@ def submit():
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
         # build response to database update
-        if response.get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
+        if response and response.get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
             tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + form.email.data})
             resp = flask.make_response(tmp, 200)
         else:
