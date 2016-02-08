@@ -28,7 +28,7 @@ class RegistrationForm(Form):
     cell         = IntegerField('Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
     year         = IntegerField('Year in school', [validators.NumberRange(min=0, max=6), validators.InputRequired()])
     shirt_size   = StringField('Shirt Size', [validators.Length(min=1, max=4), validators.InputRequired()])
-    reimbursement= BooleanField('Reimbursement needed', [validators.InputRequired()])
+    reimbursement= BooleanField('Reimbursement needed', [])
     no_edu       = BooleanField('No .edu email', [validators.Optional()])
     gender       = StringField('Gender', [validators.Optional()])
     ethnicity    = FieldList(config.ethnicity_field)
