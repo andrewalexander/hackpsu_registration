@@ -41,11 +41,10 @@ def validate_registration_field(attendee):
     wtforms_json.init()
 
     form = RegistrationForm.from_json(json.loads(attendee))
-    print attendee
     if form.validate():
         return form
     else:
-        return None
+        return form.errors
 
 
 def config_db():
