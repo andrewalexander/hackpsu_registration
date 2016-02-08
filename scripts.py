@@ -23,7 +23,7 @@ config = Config()
 class RegistrationForm(Form):
     first_name   = StringField('First Name', [validators.Length(min=2, max=25), validators.InputRequired()])
     last_name    = StringField('Last Name', [validators.Length(min=2, max=25), validators.InputRequired()])
-    email        = StringField('Email Address', [validators.Length(min=6, max=35), validators.InputRequired()])
+    email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
     age          = IntegerField('Age', [validators.NumberRange(min=10, max=125), validators.InputRequired()])
     cell         = IntegerField('Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
     year         = IntegerField('Year in school', [validators.NumberRange(min=0, max=6), validators.InputRequired()])
