@@ -44,7 +44,8 @@ def validate_registration_field(attendee):
     if form.validate():
         return form
     else:
-        return form.errors
+        print form.errors
+        return None
 
 
 def config_db():
