@@ -32,7 +32,7 @@ def profile(id = None):
         # get all users from database
         all_users = scripts.get_attendees()
         if all_users:
-            tmp = jsonify(all_users)
+            tmp = jsonify({'response': all_users})
             resp = flask.make_response(tmp, 200)
         else:
             tmp = jsonify({'error': 'Error communicating with database'})
