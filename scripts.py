@@ -15,8 +15,6 @@ class Config():
         self.db_name = 'hackpsu_registration'
         self.ethnicity_field = StringField('Ethnicity', [validators.Length(min=5, max=15), validators.Optional()])
         self.dietary_field = StringField('Dietary restrictions', [validators.Length(min=5, max=15), validators.Optional()])
-
-# instantiate Config object
 config = Config()
 
 # define the WTForm for easy validation
@@ -36,15 +34,14 @@ class RegistrationForm(Form):
     other_dietary= StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
     first        = BooleanField('First hackathon', [validators.Optional()])
 
+
 def validate_registration_field(attendee):
-    
     wtforms_json.init()
 
     form = RegistrationForm.from_json(json.loads(attendee))
     if form.validate():
         return form
     else:
-        print form.errors
         return None
 
 
@@ -57,10 +54,9 @@ def get_attendees():
     client = boto3.client('dynamodb')
     all_users = []
 
-    response = client.scan(
-        TableName=config.db_name
-    )
-    if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
+    response = client.scan(TableName=config.db_name)
+    
+    if response and response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
         for entry in response.get('Items'):
             all_users.append({
                 'first_name': entry.get('first_name', {}).get('S', ''),
@@ -129,6 +125,7 @@ def add_new_attendee(attendee):
     'first': attendee.first.data,
     'user_id': str(user_id)}
 
+    # Need to check for empties since DynamoDB complains
     for key, value in new_attendee.iteritems():
         if not value:
             new_attendee[key] = 'Null'
@@ -137,12 +134,8 @@ def add_new_attendee(attendee):
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     try:
         table = dynamodb.Table(config.db_name)
-        response = table.put_item(
-            Item=new_attendee
-        )    
+        response = table.put_item(Item=new_attendee)    
     except ClientError, e:
-        # TODO: put e in INFO logs
-        print e
         return None
 
     return response
