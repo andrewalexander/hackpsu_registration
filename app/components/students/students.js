@@ -2,11 +2,12 @@
 
 app = angular.module('myApp.students', ['ngRoute'])
 
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider', function($routeProvider, $httpProvider) {
   $routeProvider.when('/students', {
     templateUrl: 'components/students/students.html',
     controller: 'StudentsCtrl'
   });
+  $httpProvider.defaults.useXDomain = true;
 }]);
 
 app.factory('userFactory', ['$http', function($http) {
