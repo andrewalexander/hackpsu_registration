@@ -1,0 +1,98 @@
+<div class="jumbotron">
+   <h1>HackPSU Registration</h1>
+</div>
+<div ng-controller="StudentsCtrl">
+    <form class="simple-form">
+        <label for="first_name"> First Name/Friendly Name: *</label><br/>
+            <input type="text" id="first_name" ng-model="user.first_name" required/><br>
+        
+        <label for="last_name"> Last Name/Family Name: *</label><br>
+            <input type="text" id="last_name" ng-model="user.last_name" required/><br>
+        
+        <!-- Need to handle the non-EDU stuff. Checkbox? Have them do something after? -->
+        <label for="email"> Email (must be a .edu email): *</label><br>
+            <input type="email" id="email" ng-model="user.email" required/><br>
+            <input type="checkbox" id="no_edu" ng-model="user.no_edu"/>I don't have a .edu email<br>
+            <!-- <input type="email" id="no_edu" ng-model="user.no_edu"/><br> -->
+
+        <!-- How do we get it to auto-format like all the fancy sites? -->
+        <label for="cell"> Cell Phone: *</label><br>
+            <input type="number" id="cell" ng-model="user.cell" required/><br>
+        
+        <!-- Should this be a radio button instead? -->
+        <label for="gender"> Gender: </label><br>
+            <select name="gender" id="gender" ng-model="user.gender">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="trans">Transgender</option>
+                <option value="androgynous">Androgynous</option>
+            </select><br>   
+        
+        <label for="age"> Age: *</label><br>
+            <input type="number" id="age" ng-model="user.age" min="10" max="130" required/><br>
+        
+        <label for="year"> Year in School: *</label><br>
+            <select name="year" id="year" ng-model="user.year" required>
+                <option value="0">High School</option>
+                <option value="1">First Year</option>
+                <option value="2">Second Year</option>
+                <option value="3">Third Year</option>
+                <option value="4">Fourth Year</option>
+                <option value="5">Fifth Year</option>
+                <option value="6">Graduate</option>
+            </select><br>
+        
+        <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply): </label><br>
+            <select name="ethnicity" id="ethnicity" ng-model="user.ethnicity" multiple>
+                <option value="opt_out">I prefer not to answer</option>
+                <option value="asian">Asian</option>
+                <option value="black">Black</option>
+                <option value="filipino">Filipino</option>
+                <option value="hawaiian">Hawaiian</option>
+                <option value="hispanic">Hispanic</option>
+                <option value="other">Other/Unknown</option>
+                <option value="native-american">Native American</option>
+                <option value="white">White/Caucasion</option>
+            </select><br>
+        
+        <label for="dietary"> Any Dietary Restrictions? (select all that apply): </label><br>
+            <select name="dietary" id="dietary" ng-model="user.dietary" multiple>
+                <option value="vegan">Vegan</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="pescetarian">Pescetarian</option>
+                <option value="allergy_peanut">Peanut Allergy</option>
+                <option value="allergy_lactose">Dairy Allergy/Lactose Intolerant</option>
+                <option value="allergy_egg">Egg Allergy</option>
+                <option value="allergy_gluten">Gluten Allergy</option>
+                <option value="allergy_kosher">Kosher</option>
+                <option value="allergy_halal">Halal</option>
+            </select><br>
+            Other: 
+            <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
+        
+        <!-- Should this be a radio button instead? -->
+        <label for="shirt_size"> Shirt Size: *</label><br>
+            <select name="shirt_size" id="shirt_size" ng-model="user.shirt_size" required>
+                <option value="s">Small</option>
+                <option value="m">Medium</option>
+                <option value="l">Large</option>
+                <option value="xl">Xtra Large</option>
+                <option value="2xl">2XL</option>
+                <option value="3xl">3XL</option>
+                <option value="4xl">4XL</option>
+            </select><br>
+        <label for="reimbursement"> Need Reimbursement? *</label><br>
+            <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/>Yes<br>
+            <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/>No<br>
+        <label for="first"> First Hackathon? </label><br>
+            <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes<br>
+            <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No<br>
+    
+    <input type="button" ng-click="reset()" value="Reset" />
+    <input type="submit" ng-click="update(user)" value="Save" />
+    <input type="submit" ng-click="send()" value="Send" />
+  </form>
+  
+  <pre>user = {{user | json}}</pre>
+  <pre>master = {{master | json}}</pre>
+</div>

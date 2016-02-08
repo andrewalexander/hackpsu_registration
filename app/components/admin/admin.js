@@ -1,18 +1,18 @@
 'use strict';
 
-app = angular.module('myApp.students', ['ngRoute'])
+app = angular.module('myApp.admin', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/students', {
-    templateUrl: 'components/students/students.html',
-    controller: 'StudentsCtrl'
+  $routeProvider.when('/admin', {
+    templateUrl: 'components/admin/admin.html',
+    controller: 'AdminCtrl'
   });
 }]);
 
-app.factory('userFactory', ['$http', function($http) {
+app.factory('adminFactory', ['$http', function($http) {
 
-    var urlBase = 'http://:5000/api/';
-    var userFactory = {};
+    var urlBase = 'http://54.84.9.133:5000/api/';
+    var adminFactory = {};
     var config = { 
         headers: 
         {
@@ -20,26 +20,23 @@ app.factory('userFactory', ['$http', function($http) {
         }
     };
 
-    userFactory.getUsers = function () {
+    adminFactory.getUsers = function () {
         return $http.get(urlBase + 'users/', config);
     };
-    userFactory.getUser = function (id) {
+    adminFactory.getUser = function (id) {
         return $http.get(urlBase + 'users/' + id + '/', config);
     };
-    userFactory.submitUser = function (user) {
+    adminFactory.submitUser = function (user) {
         console.log('incoming user: '+ JSON.stringify(user))
         return $http.post(urlBase + 'submit', JSON.stringify(user), config);
     };
-// return $resource('localhost:5000/users/:id', null,
-//     {
-//         'update': { method:'PUT' }
-//     });
-    return userFactory;
+
+    return adminFactory;
 }]);
 
 // In our controller we get the ID from the URL using ngRoute and $routeParams
 // We pass in $routeParams and our Notes factory along with $scope
-app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http', function($scope, $routeParams, userFactory, $http) {
+app.controller('StudentsCtrl', ['$scope', '$routeParams', 'adminFactory', '$http', function($scope, $routeParams, adminFactory, $http) {
     $scope.master = {};
 
     // jsonify the scope.user -> send to back_end for jsonification and updating database
@@ -55,8 +52,7 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
 
     $scope.send = function() {
         // First get a note object from the factory
-        var id = 123454321;
-        var user = userFactory.getUser(id)
+        var user = adminFactory.getUser(id)
         .success(function (custs) {
             console.log('Got user ' + id + ' response: ' + JSON.stringify(custs));
         })
@@ -64,15 +60,15 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
             console.log('couldn\'t get user ' + id);
         });;
      
-        userFactory.getUsers()
+        adminFactory.getUsers()
         .success(function (custs) {
-            console.log('users: ' + JSON.stringify(custs));
+            $scope.users = console.log('users: ' + JSON.stringify(custs));
         })
         .error(function (error) {
             console.log('couldn\'t get all users: ' + JSON.stringify(error));
         });
      
-        userFactory.submitUser($scope.user)
+        adminFactory.submitUser($scope.user)
         .success(function (custs) {
             console.log('this: ' + JSON.stringify(custs));
         })
