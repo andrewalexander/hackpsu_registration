@@ -75,7 +75,8 @@ def get_attendees():
                 'gender': entry.get('gender', {}).get('S', ''),
                 'ethnicity': [item.get('S') for item in entry.get('ethnicity', {}).get('L', '')],
                 'dietary': [item.get('S') for item in entry.get('dietary', {}).get('L', '')],
-                'other_dietary': entry.get('other_dietary', {}).get('S', '')
+                'other_dietary': entry.get('other_dietary', {}).get('S', ''),
+                'first': entry.get('first', {}).get('BOOL', '')
                 })
         return all_users
     else:
