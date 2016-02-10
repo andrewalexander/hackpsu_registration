@@ -1,0 +1,12 @@
+<div ng-controller="RsvpCtrl">
+    Please verify your email and phone number:
+    <form name="rsvpForm" class="simple-form">
+        <label for="email"> Email: *</label><br>
+            <input type="email" id="email" ng-model="rsvp.email" required/><br>
+        <label for="name"> Phone number *</label><br>
+            <input type="number" id="cell" ng-model="rsvp.cell" required/><br>
+
+        <button ng-disabled="rsvpForm.$invalid" type="submit" ng-click="send()"> Send </button>
+   </form>
+</div>
+

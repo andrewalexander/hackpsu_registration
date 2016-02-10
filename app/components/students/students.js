@@ -11,7 +11,7 @@ app = angular.module('myApp.students', ['ngRoute'])
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://52.90.19.234:5000/api/';
+    var urlBase = 'http://54.175.14.44:5000/api/';
     var userFactory = {};
     var config = { 
         headers: 
@@ -20,14 +20,13 @@ app.factory('userFactory', ['$http', function($http) {
         }
     };
 
-    userFactory.getUsers = function () {
-        return $http.get(urlBase + 'users/', config);
-    };
-    userFactory.getUser = function (id) {
-        return $http.get(urlBase + 'users/' + id + '/', config);
-    };
+    // userFactory.getUsers = function () {
+    //     return $http.get(urlBase + 'users/', config);
+    // };
+    // userFactory.getUser = function (id) {
+    //     return $http.get(urlBase + 'users/' + id + '/', config);
+    // };
     userFactory.submitUser = function (user) {
-        console.log('incoming user: '+ JSON.stringify(user))
         return $http.post(urlBase + 'submit', JSON.stringify(user), config);
     };
 // return $resource('localhost:5000/users/:id', null,
@@ -54,29 +53,28 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
     $scope.reset();
 
     $scope.send = function() {
-        // First get a note object from the factory
-        var id = 123454321;
-        var user = userFactory.getUser(id)
-        .success(function (custs) {
-            console.log('Got user ' + id + ' response: ' + JSON.stringify(custs));
-        })
-        .error(function (error) {
-            console.log('couldn\'t get user ' + id);
-        });;
+        // var user = userFactory.getUser(id)
+        // .success(function (custs) {
+        //     console.log('Got user ' + id + ' response: ' + JSON.stringify(custs));
+        // })
+        // .error(function (error) {
+        //     console.log('couldn\'t get user ' + id);
+        // });;
      
-        userFactory.getUsers()
-        .success(function (custs) {
-            console.log('users: ' + JSON.stringify(custs));
-        })
-        .error(function (error) {
-            console.log('couldn\'t get all users: ' + JSON.stringify(error));
-        });
+        // userFactory.getUsers()
+        // .success(function (custs) {
+        //     console.log('users: ' + JSON.stringify(custs));
+        // })
+        // .error(function (error) {
+        //     console.log('couldn\'t get all users: ' + JSON.stringify(error));
+        // });
      
         userFactory.submitUser($scope.user)
         .success(function (custs) {
             console.log('this: ' + JSON.stringify(custs));
         })
         .error(function (error) {
+            alert(error);
             console.log('Bad request: ' + JSON.stringify(error));
         });
     };

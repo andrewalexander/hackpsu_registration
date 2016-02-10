@@ -2,6 +2,8 @@ import boto3
 import json
 import wtforms_json
 import uuid
+import os
+import re
 from flask import Flask, render_template
 from botocore.exceptions import ClientError
 from wtforms import Form, BooleanField, StringField, IntegerField, FieldList, validators
@@ -33,16 +35,28 @@ class RegistrationForm(Form):
     dietary      = FieldList(config.dietary_field)
     other_dietary= StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
     first        = BooleanField('First hackathon', [validators.Optional()])
+    user_id      = StringField('User ID', [validators.Length(min=36, max=36), validators.Optional()])
+
+class RsvpForm(Form):
+    email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
+    cell         = IntegerField('Cell Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
+    user_id      = StringField('User ID', [validators.Length(min=36, max=36), validators.InputRequired()])
 
 
 def validate_registration_field(attendee):
     wtforms_json.init()
-
+    # clean up the phone number
     form = RegistrationForm.from_json(json.loads(attendee))
     if form.validate():
         return form
-    else:
-        return None
+
+
+def validate_rsvp_field(form):
+    wtforms_json.init()
+
+    form = RsvpForm.from_json(json.loads(form))
+    if form.validate():
+        return form
 
 
 def config_db():
@@ -86,12 +100,30 @@ def get_attendee_from_db(attendee_id):
     pass
 
 
-def generate_unique_url(attendee_id):
-    pass
 
+def send_registration_email(form_data):
+    ses = boto3.client('ses', region_name='us-east-1')
+    
+    # get the message file
+    with open(os.path.expanduser('./email_templates/message.json')) as message_file:
+        message = json.load(message_file)
+    
+    message['Body']['Html']['Data'] = message['Body']['Html']['Data'].format(first_name=form_data.get('first_name'), user_id=form_data.get('user_id'))
 
-def update_attendee_entries(attendee_list):
-    pass
+    # this is temporary
+    with open(os.path.expanduser('./email_templates/destination.json')) as destination_file:
+        destination = json.load(destination_file)
+
+    source = 'registration@hackpsu.org'
+    # source = 'andrewalex1992@gmail.com'
+
+    response = ses.send_email(
+        Source=source,
+        Destination=destination,
+        Message=message
+    )
+
+    return response
 
 
 def send_emails(attendee_list):
@@ -138,6 +170,27 @@ def add_new_attendee(attendee):
     except ClientError, e:
         return None
 
+    res = {'aws_response': response,
+           'new_attendee': new_attendee}
+    return res
+
+def add_rsvp(rsvp_data):
+    client = boto3.client('dynamodb', region_name='us-east-1')
+
+    aws_response = client.get_item(TableName=config.db_name, Key = {'email': { 'S': rsvp_data.get('email')}})
+    rsvp_response = None
+    if aws_response.get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
+        # make sure IDs match using email as key
+        if aws_response.get('Item').get('user_id').get('S') == rsvp_data.get('user_id')\
+        and int(aws_response.get('Item').get('cell').get('N')) == rsvp_data.get('cell'):
+            new_item = aws_response.get('Item')
+            new_item.update({'rsvp': {'BOOL': True}})
+            
+            rsvp_response = client.put_item(TableName=config.db_name, Item=new_item)
+
+    response = {'aws_response': aws_response,
+                'rsvp_response': rsvp_response}
+            
     return response
 
 

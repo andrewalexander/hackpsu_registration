@@ -1,0 +1,16 @@
+{
+  "Subject": {
+    "Data": "Test email sent using the AWS CLI",
+    "Charset": "UTF-8"
+  },
+  "Body": {
+    "Text": {
+      "Data": "This is the message body in text format.",
+      "Charset": "UTF-8"
+    },
+    "Html": {
+      "Data": "Hello {first_name}, <br><br> Thank you for registering for HackPSU. To RSVP, please use the following link: <a class=\"ulink\" href=\"http://hackpsu.org/registration/rsvp/{user_id}/\" target=\"_blank\">RSVP</a>.",
+      "Charset": "UTF-8"
+    }
+  }
+}

@@ -12,3 +12,4 @@ __pycache__
 .idea
 !.gitkeep
 setup.py
+npm-debug.log

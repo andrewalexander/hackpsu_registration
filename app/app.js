@@ -6,7 +6,8 @@ var app = angular.module('myApp', [
   'myApp.home',
   'myApp.version',
   'myApp.students',
-  'myApp.signup'
+  'myApp.signup',
+  'myApp.rsvp'
 ])
 .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});

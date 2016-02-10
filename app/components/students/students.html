@@ -2,7 +2,7 @@
    <h1>HackPSU Registration</h1>
 </div>
 <div ng-controller="StudentsCtrl">
-    <form class="simple-form">
+    <form name="userForm" class="simple-form">
         <label for="first_name"> First Name/Friendly Name: *</label><br/>
             <input type="text" id="first_name" ng-model="user.first_name" required/><br>
         
@@ -88,7 +88,7 @@
             <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes<br>
             <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No<br>
     
-    <input type="submit" ng-click="send()" value="Send" />
+    <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
   </form>
   
   <pre>user = {{user | json}}</pre>

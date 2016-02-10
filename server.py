@@ -1,6 +1,7 @@
 import flask
 import json
 import scripts
+import multiprocessing
 from flask import Flask, render_template, jsonify, request
 from flask.ext.cors import CORS
 app = Flask(__name__)
@@ -11,7 +12,8 @@ CORS(app, resources=r'/api/*', allow_headers=['Content-Type', 'Access-Control-Al
 def index():
     val = flask.request.args
     # return val
-    return render_template('index.html')
+    # return 
+    resp = flask.make_response(render_template('index.html'), 200)
 
 
 @app.route('/login/<val>', methods=['GET'])
@@ -49,21 +51,51 @@ def submit():
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
         # build response to database update
-        if response and response.get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
-            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + form.email.data})
+        if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + response.get('new_attendee').get('email')})
             resp = flask.make_response(tmp, 200)
+
+            # now start a background process to send the email out, passing in hash
+            jobs = []
+            data = response.get('new_attendee')
+            p = multiprocessing.Process(target=send_email, args=tuple(data.items()))
+            jobs.append(p)
+            p.start()
+
         else:
             tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
             resp = flask.make_response(tmp, 500)
     else:
-        print 'bad form'
-        tmp = jsonify({'HTTPStatusCode': 400, 'message': 'ERROR: Invalid form'})
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': form.errors})
         resp = flask.make_response(tmp, 400)
-    
-    
     
     return resp
 
+@app.route('/api/rsvp', methods = ['POST'])
+def rsvp():
+    if request.method == 'POST':
+        print request.data
+        form = scripts.validate_rsvp_field(request.data)
+    if form:
+        response = scripts.add_rsvp(form.data)
+        if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': response.get('rsvp_response')})
+            resp = flask.make_response(tmp, 200)
+
+        else:
+            tmp = jsonify({'HTTPStatusCode': 500, 'message': response.get('aws_response')})
+            resp = flask.make_response(tmp, 500)
+    else:
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': 'invalid_form: ' + request.data})
+        resp = flask.make_response(tmp, 400)
+
+    return resp
+
+
+
+def send_email(*args, **kwargs):
+    form = dict(args)
+    scripts.send_registration_email(form)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
