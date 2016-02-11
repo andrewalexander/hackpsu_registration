@@ -11,7 +11,7 @@ app = angular.module('myApp.rsvp', ['ngRoute'])
 
 app.factory('rsvpFactory', ['$http', function($http) {
 
-    var urlBase = 'http://54.175.14.44:5000/api/';
+    var urlBase = 'http://:5000/api/';
     var rsvpFactory = {};
     var config = { 
         headers: 
@@ -38,7 +38,7 @@ app.controller('RsvpCtrl', ['$scope', '$routeParams', 'rsvpFactory', '$http', fu
         console.log($scope.rsvp);
         rsvpFactory.rsvp($scope.rsvp)
         .success(function(resp){
-            
+
             console.log(JSON.stringify(resp));
         })
         .error(function (error) {

@@ -11,7 +11,7 @@ app = angular.module('myApp.students', ['ngRoute', 'checklist-model'])
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://54.175.14.44:5000/api/';
+    var urlBase = 'http://:5000/api/';
     var userFactory = {};
     var config = { 
         headers: 
