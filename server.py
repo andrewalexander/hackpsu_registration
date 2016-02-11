@@ -50,6 +50,16 @@ def submit():
     if form:
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
+        
+        # catch our custom errors first
+        if response.get('error_response'):
+            if response.get('error_response') == 'user_exists':
+                tmp = jsonify({'HTTPStatusCode': 200, 'message': 'user_exists'})
+                resp = flask.make_response(tmp, 200)
+
+                # get out of there, she's gonna blow!
+                return resp
+
         # build response to database update
         if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
             tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + response.get('new_attendee').get('email')})
@@ -78,15 +88,24 @@ def rsvp():
         form = scripts.validate_rsvp_field(request.data)
     if form:
         response = scripts.add_rsvp(form.data)
+        # catch our custom errors first
+        if response.get('error_response'):
+            if response.get('error_response') == 'user_exists':
+                tmp = jsonify({'HTTPStatusCode': 200, 'message': 'user_exists'})
+                resp = flask.make_response(tmp, 200)
+
+                # no sense checking the rest
+                return resp
+
         if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
-            tmp = jsonify({'HTTPStatusCode': 200, 'message': response.get('rsvp_response')})
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': response.get('error_response')})
             resp = flask.make_response(tmp, 200)
 
         else:
-            tmp = jsonify({'HTTPStatusCode': 500, 'message': response.get('aws_response')})
+            tmp = jsonify({'HTTPStatusCode': 500, 'message': response})
             resp = flask.make_response(tmp, 500)
     else:
-        tmp = jsonify({'HTTPStatusCode': 400, 'message': 'invalid_form: ' + request.data})
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': {'error_response': request.data}})
         resp = flask.make_response(tmp, 400)
 
     return resp

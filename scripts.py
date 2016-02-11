@@ -86,7 +86,9 @@ def get_attendees():
                 'ethnicity': [item.get('S') for item in entry.get('ethnicity', {}).get('L', '')],
                 'dietary': [item.get('S') for item in entry.get('dietary', {}).get('L', '')],
                 'other_dietary': entry.get('other_dietary', {}).get('S', ''),
-                'first': entry.get('first', {}).get('BOOL', '')
+                'first': entry.get('first', {}).get('BOOL', ''),
+                'user_id': entry.get('user_id', {}).get('S', ''),
+                'rsvp': entry.get('rsvp', {}).get('BOOL', '')
                 })
         return all_users
     else:
@@ -95,10 +97,19 @@ def get_attendees():
 
 # handling user on the rsvp URL
 # assume params will be stripped from request URL
-def get_attendee_from_db(attendee_id):
-    attendee_id = params.attendee_id
-    pass
+def get_attendee_from_db(attendee_key):
+    client = boto3.client('dynamodb', region_name='us-east-1')
+    
+    error_response = None
+    try:
+        aws_response = client.get_item(TableName=config.db_name, Key = {'email': { 'S': attendee_key}})
+    except ClientError, e:
+        error_response = dict(e)
 
+    res = {'aws_response': aws_response,
+           'error_response': error_response}
+    
+    return res
 
 
 def send_registration_email(form_data):
@@ -108,6 +119,7 @@ def send_registration_email(form_data):
     with open(os.path.expanduser('./email_templates/message.json')) as message_file:
         message = json.load(message_file)
     
+    # Read in the message and replace the first name with the entered first name; also get the user_id to build the response URL
     message['Body']['Html']['Data'] = message['Body']['Html']['Data'].format(first_name=form_data.get('first_name'), user_id=form_data.get('user_id'))
 
     # this is temporary
@@ -157,91 +169,55 @@ def add_new_attendee(attendee):
     'first': attendee.first.data,
     'user_id': str(user_id)}
 
-    # Need to check for empties since DynamoDB complains
+    # check if the user exists already
+    # get our db and put the new item in
+    dynamodb = boto3.client('dynamodb', region_name='us-east-1')
+    response = get_attendee_from_db(new_attendee.get('email'))
+
+    # if it was able to get an entry, you have already registered...
+    if response.get('aws_response', ''):
+        error_response = 'user_exists'
+        res = {'aws_response': response,
+               'error_response': error_response}
+        
+        return res        
+
+    # Need to check for empties since DynamoDB complains about empty attributes
     for key, value in new_attendee.iteritems():
         if not value:
             new_attendee[key] = 'Null'
-
-    # get our db and put the new item in
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     try:
-        table = dynamodb.Table(config.db_name)
-        response = table.put_item(Item=new_attendee)    
+        response = dynamodb.put_item(TableName=config.db_name, Item=new_attendee)    
     except ClientError, e:
         return None
 
     res = {'aws_response': response,
-           'new_attendee': new_attendee}
+           'error_response': error_response}
     return res
 
-def add_rsvp(rsvp_data):
-    client = boto3.client('dynamodb', region_name='us-east-1')
 
-    aws_response = client.get_item(TableName=config.db_name, Key = {'email': { 'S': rsvp_data.get('email')}})
-    rsvp_response = None
+def add_rsvp(rsvp_data): 
+    response = get_attendee_from_db(rsvp_data.email)
+
+    # return error
+    if response.get('error_response', ''):
+        return response
+
+    aws_response = response.get('aws_response')
+
     if aws_response.get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
-        # make sure IDs match using email as key
-        if aws_response.get('Item').get('user_id').get('S') == rsvp_data.get('user_id')\
-        and int(aws_response.get('Item').get('cell').get('N')) == rsvp_data.get('cell'):
-            new_item = aws_response.get('Item')
-            new_item.update({'rsvp': {'BOOL': True}})
+        # first check if they've already RSVPd
+        if aws_response.get('Item').get('rsvp', False) == False:
+            # validation
+            if aws_response.get('Item').get('user_id').get('S') == rsvp_data.get('user_id')\
+            and int(aws_response.get('Item').get('cell').get('N')) == rsvp_data.get('cell'):
+                new_item = aws_response.get('Item')
+                new_item.update({'rsvp': {'BOOL': True}})
             
-            rsvp_response = client.put_item(TableName=config.db_name, Item=new_item)
+            aws_response = client.put_item(TableName=config.db_name, Item=new_item)
+        else:
+            error_response = 'user_exists'
 
-    response = {'aws_response': aws_response,
-                'rsvp_response': rsvp_response}
+    response = {'aws_response': aws_response, 'error_response': error_response}
             
     return response
-
-
-def seed_db(db_name):
-    dynamodb = boto3.resource('dynamodb')
-
-    # TODO: switch to a config json
-    # with open('test_hackpsu_table_config.json') as table_config:
-    #     config = json.load(table_config)
-    try:
-        # Try to get an existing database
-        table = dynamodb.Table(name=db_name)
-        table.load()
-    except ClientError as e:
-        # create database since it doesn't exist
-        if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            # TODO: switch to a config json
-            # table = dynamodb.create_table(
-            #     TableName=config.TableName,
-            #     KeySchema=config.KeySchema,
-            #     AttributeDefinitions=config.AttributeDefinitions,
-            #     ProvisionedThroughput=config.ProvisionedThroughput
-            # )
-            table = dynamodb.create_table(
-                TableName=db_name,
-                KeySchema=[
-                    {
-                        'AttributeName': 'email',
-                        'KeyType': 'HASH'
-                    }
-                ],
-                AttributeDefinitions=[
-                    {
-                        'AttributeName': 'email',
-                        'AttributeType': 'S'
-                    }
-
-                ],
-                ProvisionedThroughput={
-                    'ReadCapacityUnits': 1,
-                    'WriteCapacityUnits': 1
-                }
-            )
-        else:
-            # if we got a different exception, it wasn't a good thing; let's get out
-            raise e
-    try:
-        # Wait until the table exists.
-        table.meta.client.get_waiter('table_exists').wait(TableName=db_name)
-    
-    except ClientError as e:
-        raise e
-
-    return table
