@@ -11,7 +11,7 @@ app = angular.module('myApp.students', ['ngRoute', 'checklist-model'])
 
 app.factory('userFactory', ['$http', function($http) {
 
-    var urlBase = 'http://:5000/api/';
+    var urlBase = 'http://52.90.183.200:5000/api/';
     var userFactory = {};
     var config = { 
         headers: 
@@ -77,13 +77,13 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
     $scope.send = function() {
         console.log($scope.user);
         // console.log($scope.user.ethnicity.join(','));
-        // userFactory.submitUser($scope.user)
-        // .success(function (custs) {
-        //     console.log('this: ' + JSON.stringify(custs));
-        // })
-        // .error(function (error) {
-        //     alert(error);
-        //     console.log('Bad request: ' + JSON.stringify(error));
-        // });
+        userFactory.submitUser($scope.user)
+        .success(function (custs) {
+            console.log('this: ' + JSON.stringify(custs));
+        })
+        .error(function (error) {
+            alert(error);
+            console.log('Bad request: ' + JSON.stringify(error));
+        });
     };
 }]);
