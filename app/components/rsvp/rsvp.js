@@ -38,6 +38,7 @@ app.controller('RsvpCtrl', ['$scope', '$routeParams', 'rsvpFactory', '$http', fu
         console.log($scope.rsvp);
         rsvpFactory.rsvp($scope.rsvp)
         .success(function(resp){
+            
             console.log(JSON.stringify(resp));
         })
         .error(function (error) {

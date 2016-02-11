@@ -1,6 +1,6 @@
 'use strict';
 
-app = angular.module('myApp.students', ['ngRoute'])
+app = angular.module('myApp.students', ['ngRoute', 'checklist-model'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/students', {
@@ -39,6 +39,28 @@ app.factory('userFactory', ['$http', function($http) {
 // In our controller we get the ID from the URL using ngRoute and $routeParams
 // We pass in $routeParams and our Notes factory along with $scope
 app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http', function($scope, $routeParams, userFactory, $http) {
+    $scope.ethnicity_choices = {
+        opt_out: 'I prefer not to answer',
+        asian: 'Asian',
+        black: 'Black',
+        filipino: 'Filipino',
+        hawaiian: 'Hawaiian',
+        hispanic: 'Hispanic',
+        other: 'Other/Unknown',
+        white: 'White/Caucasion'
+    };
+    $scope.dietary_choices = {
+        vegan: 'Vegan',
+        vegetarian: 'Vegetarian',
+        pescetarian: 'Pescetarian',
+        allergy_peanut: 'Peanut Allergy',
+        allergy_lactose: 'Dairy Allergy/Lactose Intolerant',
+        allergy_egg: 'Egg Allergy',
+        allergy_gluen: 'Gluten Allergy',
+        kosher: 'Kosher',
+        halal: 'Halal'
+    };
+
     $scope.master = {};
 
     // jsonify the scope.user -> send to back_end for jsonification and updating database
@@ -53,29 +75,15 @@ app.controller('StudentsCtrl', ['$scope', '$routeParams', 'userFactory', '$http'
     $scope.reset();
 
     $scope.send = function() {
-        // var user = userFactory.getUser(id)
+        console.log($scope.user);
+        // console.log($scope.user.ethnicity.join(','));
+        // userFactory.submitUser($scope.user)
         // .success(function (custs) {
-        //     console.log('Got user ' + id + ' response: ' + JSON.stringify(custs));
+        //     console.log('this: ' + JSON.stringify(custs));
         // })
         // .error(function (error) {
-        //     console.log('couldn\'t get user ' + id);
-        // });;
-     
-        // userFactory.getUsers()
-        // .success(function (custs) {
-        //     console.log('users: ' + JSON.stringify(custs));
-        // })
-        // .error(function (error) {
-        //     console.log('couldn\'t get all users: ' + JSON.stringify(error));
+        //     alert(error);
+        //     console.log('Bad request: ' + JSON.stringify(error));
         // });
-     
-        userFactory.submitUser($scope.user)
-        .success(function (custs) {
-            console.log('this: ' + JSON.stringify(custs));
-        })
-        .error(function (error) {
-            alert(error);
-            console.log('Bad request: ' + JSON.stringify(error));
-        });
     };
 }]);
