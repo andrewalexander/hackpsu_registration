@@ -15,7 +15,7 @@ app.controller('ExistsCtrl', ['$scope', '$routeParams', function($scope, $routeP
     if ($routeParams.action =="rsvp") {
     	$scope.action = "RSVPed"
     } else {
-    	$scope.action = $routeParams.action	
+    	$scope.action = "registered"
     }
     
 
