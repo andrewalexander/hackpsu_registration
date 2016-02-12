@@ -17,6 +17,7 @@ class Config():
         self.db_name = 'hackpsu_registration'
         self.ethnicity_field = StringField('Ethnicity', [validators.Length(min=5, max=15), validators.Optional()])
         self.dietary_field = StringField('Dietary restrictions', [validators.Length(min=5, max=15), validators.Optional()])
+        self.source_email = 'registration@hackpsu.org'
 config = Config()
 
 # define the WTForm for easy validation
@@ -35,7 +36,10 @@ class RegistrationForm(Form):
     dietary      = FieldList(config.dietary_field)
     other_dietary= StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
     first        = BooleanField('First hackathon', [validators.Optional()])
-    user_id      = StringField('User ID', [validators.Length(min=36, max=36), validators.Optional()])
+    github       = StringField('Github URL', [validators.Length(min=2, max=25), validators.Optional()])
+    linkedin     = StringField('LinkedIn URL', [validators.Length(min=2, max=25), validators.Optional()])
+    website      = StringField('Website URL', [validators.Length(min=2, max=25), validators.Optional()])
+
 
 class RsvpForm(Form):
     email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
@@ -47,6 +51,7 @@ def validate_registration_field(attendee):
     wtforms_json.init()
     # clean up the phone number
     form = RegistrationForm.from_json(json.loads(attendee))
+    
     if form.validate():
         return form
 
@@ -88,7 +93,10 @@ def get_attendees():
                 'other_dietary': entry.get('other_dietary', {}).get('S', ''),
                 'first': entry.get('first', {}).get('BOOL', ''),
                 'user_id': entry.get('user_id', {}).get('S', ''),
-                'rsvp': entry.get('rsvp', {}).get('BOOL', '')
+                'rsvp': entry.get('rsvp', {}).get('BOOL', ''),
+                'github': entry.get('github', {}).get('S', ''),
+                'linkedin': entry.get('linkedin', {}).get('S', ''),
+                'website': entry.get('website', {}).get('S', '')
                 })
         return all_users
     else:
@@ -112,28 +120,32 @@ def get_attendee_from_db(attendee_key):
     return res
 
 
-def send_registration_email(form_data):
+def send_email(email, data):
     ses = boto3.client('ses', region_name='us-east-1')
     
-    # get the message file
-    with open(os.path.expanduser('./email_templates/message.json')) as message_file:
-        message = json.load(message_file)
-    
-    # Read in the message and replace the first name with the entered first name; also get the user_id to build the response URL
-    message['Body']['Html']['Data'] = message['Body']['Html']['Data'].format(first_name=form_data.get('first_name'), user_id=form_data.get('user_id'))
-
-    # this is temporary
-    with open(os.path.expanduser('./email_templates/destination.json')) as destination_file:
+    with open('./email_templates/destination.json') as destination_file:
         destination = json.load(destination_file)
 
-    source = 'registration@hackpsu.org'
-    # source = 'andrewalex1992@gmail.com'
+    destination['ToAddresses'][0] = destination['ToAddresses'][0].format(email=email)
 
+    source = config.source_email
     response = ses.send_email(
         Source=source,
         Destination=destination,
-        Message=message
+        Message=data
     )
+
+    return response
+
+def send_registration_email(form_data):
+   
+    with open('./email_templates/registration_email.json') as message_file:
+        message = json.load(message_file)
+    
+    # Read in the message and replace the first name with the entered first name; also get the user_id to build the response URL
+    message['Body']['Html']['Data'] = message['Body']['Html']['Data'].format(first_name=form_data.get('first_name'))
+    email = form_data.get('email')
+    response = send_email(email, message)
 
     return response
 
@@ -147,8 +159,6 @@ def send_alerts(sns_topic):
 
 
 def add_new_attendee(attendee):
-    config = Config()
-
     # generate a unique hash/uuid:
     user_id = uuid.uuid3(uuid.NAMESPACE_DNS, str(attendee.email.data))
 
@@ -167,15 +177,17 @@ def add_new_attendee(attendee):
     'dietary': attendee.dietary.data,
     'other_dietary': attendee.other_dietary.data,
     'first': attendee.first.data,
-    'user_id': str(user_id)}
+    'user_id': str(user_id),
+    'github': attendee.github.data,
+    'linkedin': attendee.linkedin.data,
+    'website': attendee.website.data}
 
     # check if the user exists already
     # get our db and put the new item in
-    dynamodb = boto3.client('dynamodb', region_name='us-east-1')
     response = get_attendee_from_db(new_attendee.get('email'))
-
+    error_response = None
     # if it was able to get an entry, you have already registered...
-    if response.get('aws_response', ''):
+    if response.get('aws_response', {}).get('Item', ''):
         error_response = 'user_exists'
         res = {'aws_response': response,
                'error_response': error_response}
@@ -186,13 +198,20 @@ def add_new_attendee(attendee):
     for key, value in new_attendee.iteritems():
         if not value:
             new_attendee[key] = 'Null'
+    
     try:
-        response = dynamodb.put_item(TableName=config.db_name, Item=new_attendee)    
+        dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+        try:
+            table = dynamodb.Table(config.db_name)
+            response = table.put_item(Item=new_attendee)  
+        except ClientError, e:
+            pass
     except ClientError, e:
-        return None
+        response = dynamodb
 
     res = {'aws_response': response,
-           'error_response': error_response}
+           'error_response': error_response,
+           'new_attendee': new_attendee}
     return res
 
 

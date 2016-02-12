@@ -4,7 +4,7 @@ app = angular.module('myApp.students', ['ngRoute', 'checklist-model'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/students', {
-    templateUrl: 'components/students/students.html',
+    templateUrl: 'app/components/students/students.html',
     controller: 'StudentsCtrl'
   });
 }]);
@@ -67,14 +67,14 @@ app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFact
 
     $scope.send = function() {
         // console.log($scope.user.ethnicity.join(','));
+        // $scope.user.submitted = true;
         userFactory.submitUser($scope.user)
         .success(function (attendee) {
-            console.log(attendee);
+            console.log(attendee.message);
             if (attendee.message == 'user_exists') {
                 $location.path('/exists/registered')
-            } else {
-                $location.path('/thanks/registering')
-            }
+            }; 
+            $location.path('/thanks/registering')
         })
         .error(function (error) {
             alert(error);

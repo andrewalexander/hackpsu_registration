@@ -4,7 +4,7 @@ app = angular.module('myApp.thanks', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/thanks/:action', {
-    templateUrl: 'components/thanks/thanks.html',
+    templateUrl: 'app/components/thanks/thanks.html',
     controller: 'ThanksCtrl'
   });
 }]);

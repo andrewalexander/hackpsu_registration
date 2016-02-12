@@ -3,7 +3,7 @@
 app = angular.module('myApp.rsvp', ['ngRoute'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/rsvp/:id', {
-    templateUrl: 'components/rsvp/rsvp.html',
+    templateUrl: 'app/components/rsvp/rsvp.html',
     controller: 'RsvpCtrl'
   });
 }]);

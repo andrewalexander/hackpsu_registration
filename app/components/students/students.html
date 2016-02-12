@@ -4,36 +4,44 @@
 <div ng-controller="StudentsCtrl">
     <form name="userForm" class="simple-form">
         <div class="row">
-            <div class="col-md-6 col-xs-12">
+            <div class="col-md-12 col-xs-12">
                 <div class="well">
-                    <label for="first_name"> First Name/Friendly Name: *</label><br/>
+                    <label for="first_name"> First Name/Friendly Name *</label><br/>
                         <input type="text" id="first_name" ng-model="user.first_name" required/><br>
 
-                    <label for="last_name"> Last Name/Family Name: *</label><br>
+                    <label for="last_name"> Last Name/Family Name *</label><br>
                         <input type="text" id="last_name" ng-model="user.last_name" required/><br>
 
                     <!-- Need to handle the non-EDU stuff. Checkbox? Have them do something after? -->
-                    <label for="email"> Email (must be a .edu email): *</label><br>
+                    <label for="email"> Email (must be a .edu email) *</label><br>
                         <input type="email" id="email" ng-model="user.email" required/><br>
-                        <input type="checkbox" id="no_edu" ng-model="user.no_edu"/>I don't have a .edu email<br>
-                    <!-- <input type="email" id="no_edu" ng-model="user.no_edu"/><br> -->
+                        <input type="checkbox" id="no_edu" ng-model="user.no_edu"/> I don't have a .edu email<br>
+
+                     <label for="github"> GitHub URL</label><br/>
+                        <input type="text" id="github" ng-model="user.github"/><br>
+
+                    <label for="linkedin"> LinkedIn URL</label><br/>
+                        <input type="text" id="linkedin" ng-model="user.linkedin"/><br>
+
+                    <label for="website"> Website URL</label><br/>
+                        <input type="text" id="website" ng-model="user.website"/><br>
+
+                    <br>
 
                     <!-- How do we get it to auto-format like all the fancy sites? -->
-                    <label for="cell"> Cell Phone: *</label><br>
-                    <input type="number" id="cell" ng-model="user.cell" required/><br>
+                    <label for="cell"> Cell Phone *</label>
+                        <input type="number" id="cell" min="0" max="9999999999" name="cell" ng-model="user.cell" required/>
+                    
+                    <div class=divider></div>
+                    
+                    <label for="age"> Age *</label>
+                        <input type="number" id="age" ng-model="user.age" min="10" max="130" required/>
+                        
+                    <div class=divider></div>
 
-                    <label for="age"> Age: *</label><br>
-                        <input type="number" id="age" ng-model="user.age" min="10" max="130" required/><br>
-
-                    <label for="gender"> Gender: </label><br>
-                        <select name="gender" id="gender" ng-model="user.gender">
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
-                            <option value="trans">Transgender</option>
-                            <option value="androgynous">Androgynous</option>
-                        </select><br>   
-
-                    <label for="year"> Year in School: *</label><br>
+                    <br>
+                    
+                    <label for="year"> Year in School *</label>
                         <select name="year" id="year" ng-model="user.year" required>
                             <option value="0">High School</option>
                             <option value="1">First Year</option>
@@ -42,10 +50,12 @@
                             <option value="4">Fourth Year</option>
                             <option value="5">Fifth Year</option>
                             <option value="6">Graduate</option>
-                        </select><br>
+                        </select>
+                    
+                    <div class=divider></div>
 
                     <!-- Should this be a radio button instead? -->
-                    <label for="shirt_size"> Shirt Size: *</label><br>
+                    <label for="shirt_size"> Shirt Size *</label>
                         <select name="shirt_size" id="shirt_size" ng-model="user.shirt_size" required>
                             <option value="s">Small</option>
                             <option value="m">Medium</option>
@@ -54,72 +64,64 @@
                             <option value="2xl">2XL</option>
                             <option value="3xl">3XL</option>
                             <option value="4xl">4XL</option>
-                        </select><br>
+                        </select>
 
-
-
-                </div>
-            </div>
-            <div class="col-md-6 col-xs-12">
-                <div class="well">
+                    <div class=divider></div>
                     
-                    <label for="reimbursement"> Need Reimbursement? *</label><br>
-                        <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/>Yes<br>
-                        <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/>No<br>
-                    <label for="first"> First Hackathon? </label><br>
-                        <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes<br>
-                        <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No<br>
+                    <label for="gender"> Gender </label>
+                        <select name="gender" id="gender" ng-model="user.gender">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="trans">Transgender</option>
+                            <option value="androgynous">Androgynous</option>
+                        </select>
 
-                        <!-- Should this be a radio button instead? -->
-                    
-                  
-                    <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply): </label><br>
-                        <span ng-repeat="(key, text) in ethnicity_choices">
+                    <br><br>
+
+                    <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply) </label><br>
+                        <div class="col-md-6 col-xs-6" ng-repeat="(key, text) in ethnicity_choices">
                             <input type="checkbox" checklist-model="user.ethnicity" checklist-value="key"> {{text}}
-                        </span>
+                            
+                            <div class=divider></div>
+                        </div>
 
-                    <label for="dietary"> Any Dietary Restrictions? (select all that apply):</label><br>
-                        <span ng-repeat="(key, text) in dietary_choices">
+                    <label for="dietary"> Any Dietary Restrictions? (select all that apply)</label><br>
+                        <div class="col-md-6 col-xs-6" ng-repeat="(key, text) in dietary_choices">
                             <input type="checkbox" checklist-model="user.dietary" checklist-value="key"> {{text}}
-                        </span>
+                        
+                            <div class=divider></div>
+                        
+                        </div>
 
-                    <br>Other: 
-                    <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
+                    <br>
+                    <div class="col-md-6 col-xs-6">
+                        Other: 
+                        <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
+                    </div>
 
+                    <label for="reimbursement"> Need Reimbursement? *</label>
+                        <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/>Yes
+                        <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/>No
+
+                    <div class=divider></div>
+
+                    <label for="first"> First Hackathon? </label>
+                        <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes
+                        <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No
+
+                    <br>
                 </div>
             </div>
+                    
+                    
+
+
         </div>
         
-        
-       
-
-        <!--         <input type="checkbox" ng-model="user.ethnicity1" value="opt_out">I prefer not to answer
-                <input type="checkbox" ng-model="user.ethnicity2" value="asian">Asian
-                <input type="checkbox" ng-model="user.ethnicity3" value="black">Black
-                <input type="checkbox" ng-model="user.ethnicity4" value="filipino">Filipino
-                <input type="checkbox" ng-model="user.ethnicity5" value="hawaiian">Hawaiian
-                <input type="checkbox" ng-model="user.ethnicity6" value="hispanic">Hispanic
-                <input type="checkbox" ng-model="user.ethnicity7" value="other">Other/Unknown
-                <input type="checkbox" ng-model="user.ethnicity8" value="native-american">Native American
-                <input type="checkbox" ng-model="user.ethnicity9" value="white">White/Caucasion
- -->
-      <!--       <select name="ethnicity" id="ethnicity" ng-model="user.ethnicity" multiple>
-                <option value="opt_out">I prefer not to answer</option>
-                <option value="asian">Asian</option>
-                <option value="black">Black</option>
-                <option value="filipino">Filipino</option>
-                <option value="hawaiian">Hawaiian</option>
-                <option value="hispanic">Hispanic</option>
-                <option value="other">Other/Unknown</option>
-                <option value="native-american">Native American</option>
-                <option value="white">White/Caucasion</option>
-            </select><br> -->
-        
-        
     
-    <!-- <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button> -->
-    <button type="submit" ng-click="send()"> Send </button>
+    <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
+    <!-- <button type="submit" ng-click="send()"> Send </button> -->
   </form>
   
-  <pre>user = {{user | json}}</pre>
+  <!-- <pre>user = {{user | json}}</pre> -->
 </div>

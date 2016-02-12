@@ -18,11 +18,11 @@ new_attendee = {'first_name': 'Andrew',
     'first': False,
     'user_id': '865309ab36cd12e'}
 
-wtforms_json.init()
-form = scripts.RegistrationForm.from_json(new_attendee)
+# wtforms_json.init()
+# form = scripts.RegistrationForm.from_json(new_attendee)
 
-if form.validate():
-	scripts.send_registration_email(form)
-	print 'passed'
-else:
-	print form.errors
+# if form.validate():
+scripts.send_registration_email(new_attendee)
+print 'passed'
+# else:
+# 	print form.errors

@@ -4,7 +4,7 @@ app = angular.module('myApp.exists', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/exists/:action', {
-    templateUrl: 'components/exists/exists.html',
+    templateUrl: 'app/components/exists/exists.html',
     controller: 'ExistsCtrl'
   });
 }]);

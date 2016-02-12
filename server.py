@@ -62,7 +62,7 @@ def submit():
 
         # build response to database update
         if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
-            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + response.get('new_attendee').get('email')})
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user'})
             resp = flask.make_response(tmp, 200)
 
             # now start a background process to send the email out, passing in hash
