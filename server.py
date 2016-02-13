@@ -47,7 +47,7 @@ def submit():
     if request.method == 'POST':
         # validate the form before we do anything else
         form = scripts.validate_registration_field(request.data)
-    if form:
+    if not form.errors:
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
         

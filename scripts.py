@@ -49,7 +49,6 @@ class RsvpForm(Form):
 
 def validate_registration_field(attendee):
     wtforms_json.init()
-    # clean up the phone number
     form = RegistrationForm.from_json(json.loads(attendee))
     
     if form.validate():

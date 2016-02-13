@@ -2,13 +2,12 @@
    <h1>Student Registration</h1>
 </div>
 <div ng-controller="StudentsCtrl">
-    <form name="userForm" class="simple-form">
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
-                <div class="well">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="well">
+                <form name="userForm" class="simple-form">
                     <label for="first_name"> First Name/Friendly Name *</label><br/>
-                        <input type="text" id="first_name" ng-model="user.first_name" required/><br>
-
+                        <input type="text" id="first_name" ng-model="user.first_name"  required/><br>
                     <label for="last_name"> Last Name/Family Name *</label><br>
                         <input type="text" id="last_name" ng-model="user.last_name" required/><br>
 
@@ -40,16 +39,16 @@
                     <div class=divider></div>
 
                     <br>
-                    
+
                     <label for="year"> Year in School *</label>
                         <select name="year" id="year" ng-model="user.year" required>
-                            <option value="0">High School</option>
-                            <option value="1">First Year</option>
-                            <option value="2">Second Year</option>
-                            <option value="3">Third Year</option>
-                            <option value="4">Fourth Year</option>
-                            <option value="5">Fifth Year</option>
-                            <option value="6">Graduate</option>
+                            <option value=0>High School</option>
+                            <option value=1>First Year</option>
+                            <option value=2>Second Year</option>
+                            <option value=3>Third Year</option>
+                            <option value=4>Fourth Year</option>
+                            <option value=5>Fifth Year</option>
+                            <option value=6>Graduate</option>
                         </select>
                     
                     <div class=divider></div>
@@ -110,18 +109,14 @@
                         <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No
 
                     <br>
-                </div>
+
+                    <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
+                    <!-- <button type="submit" ng-click="send()"> Send </button> -->
+                </form>
             </div>
-                    
-                    
-
-
         </div>
+    </div>
         
-    
-    <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
-    <!-- <button type="submit" ng-click="send()"> Send </button> -->
-  </form>
   
   <!-- <pre>user = {{user | json}}</pre> -->
 </div>
