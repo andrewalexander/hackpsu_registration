@@ -37,8 +37,17 @@ input[type=email] {
   width: 100%;
 }
 
+input[type=number] {
+  width: 100%;
+}
+
+
 input:focus {
     border: 2px solid #555;
+}
+
+label {
+  width: 100%;
 }
 
 .divider{
@@ -46,3 +55,4 @@ input:focus {
     height:auto;
     display:inline-block;
 }
+

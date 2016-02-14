@@ -22,24 +22,28 @@ config = Config()
 
 # define the WTForm for easy validation
 class RegistrationForm(Form):
-    first_name   = StringField('First Name', [validators.Length(min=2, max=25), validators.InputRequired()])
-    last_name    = StringField('Last Name', [validators.Length(min=2, max=25), validators.InputRequired()])
-    email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
-    age          = IntegerField('Age', [validators.NumberRange(min=10, max=125), validators.InputRequired()])
-    cell         = IntegerField('Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
-    year         = IntegerField('Year in school', [validators.NumberRange(min=0, max=6), validators.InputRequired()])
-    shirt_size   = StringField('Shirt Size', [validators.Length(min=1, max=4), validators.InputRequired()])
-    reimbursement= BooleanField('Reimbursement needed', [])
-    no_edu       = BooleanField('No .edu email', [validators.Optional()])
-    gender       = StringField('Gender', [validators.Optional()])
-    ethnicity    = FieldList(config.ethnicity_field)
-    dietary      = FieldList(config.dietary_field)
-    other_dietary= StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
-    first        = BooleanField('First hackathon', [validators.Optional()])
-    github       = StringField('Github URL', [validators.Length(min=2, max=25), validators.Optional()])
-    linkedin     = StringField('LinkedIn URL', [validators.Length(min=2, max=25), validators.Optional()])
-    website      = StringField('Website URL', [validators.Length(min=2, max=25), validators.Optional()])
-
+    first_name      = StringField('First Name', [validators.Length(min=2, max=25), validators.InputRequired()])
+    last_name       = StringField('Last Name', [validators.Length(min=2, max=25), validators.InputRequired()])
+    email           = StringField('Email Address', [validators.Email(), validators.InputRequired()])
+    age             = IntegerField('Age', [validators.NumberRange(min=10, max=125), validators.InputRequired()])
+    cell            = IntegerField('Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
+    year            = IntegerField('Year in school', [validators.NumberRange(min=0, max=6), validators.InputRequired()])
+    shirt_size      = StringField('Shirt Size', [validators.Length(min=1, max=4), validators.InputRequired()])
+    reimbursement   = BooleanField('Reimbursement needed', [])
+    no_edu          = BooleanField('No .edu email', [validators.Optional()])
+    gender          = StringField('Gender', [validators.Optional()])
+    ethnicity       = FieldList(config.ethnicity_field)
+    dietary         = FieldList(config.dietary_field)
+    other_dietary   = StringField('Other dietary restrictions', [validators.Length(min=2, max=35), validators.Optional()])
+    first           = BooleanField('First hackathon', [validators.Optional()])
+    github          = StringField('Github URL', [validators.Length(min=2, max=25), validators.Optional()])
+    linkedin        = StringField('LinkedIn URL', [validators.Length(min=2, max=25), validators.Optional()])
+    website         = StringField('Website URL', [validators.Length(min=2, max=25), validators.Optional()])
+    university      = StringField('University attended', [validators.Length(min=2, max=100), validators.Optional()])
+    travel_address  = StringField('Hopme location travelling from', [validators.Length(min=2, max=100), validators.Optional()])
+    software_skills = StringField('Software skills/frameworks', [validators.Length(min=2, max=150), validators.Optional()])
+    hardware_skills = StringField('Hardware skills', [validators.Length(min=2, max=150), validators.Optional()])
+    travel_from_university = BooleanField('Travelling from university', [validators.Optional()])
 
 class RsvpForm(Form):
     email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
@@ -51,8 +55,9 @@ def validate_registration_field(attendee):
     wtforms_json.init()
     form = RegistrationForm.from_json(json.loads(attendee))
     
-    if form.validate():
-        return form
+    # if form.validate():
+    return form
+
 
 
 def validate_rsvp_field(form):
@@ -61,6 +66,9 @@ def validate_rsvp_field(form):
     form = RsvpForm.from_json(json.loads(form))
     if form.validate():
         return form
+    else:
+        print 'validation errors:'
+        print form.errors
 
 
 def config_db():
@@ -95,7 +103,12 @@ def get_attendees():
                 'rsvp': entry.get('rsvp', {}).get('BOOL', ''),
                 'github': entry.get('github', {}).get('S', ''),
                 'linkedin': entry.get('linkedin', {}).get('S', ''),
-                'website': entry.get('website', {}).get('S', '')
+                'website': entry.get('website', {}).get('S', ''),
+                'university': entry.get('university', {}).get('S', ''),
+                'travel_address': entry.get('travel_address', {}).get('S', ''),
+                'software_skills': entry.get('software_skills', {}).get('S', ''),
+                'hardware_skills': entry.get('hardware_skills', {}).get('S', ''),
+                'travel_from_university': entry.get('travel_from_university', {}).get('BOOL', ''),
                 })
         return all_users
     else:
@@ -179,7 +192,13 @@ def add_new_attendee(attendee):
     'user_id': str(user_id),
     'github': attendee.github.data,
     'linkedin': attendee.linkedin.data,
-    'website': attendee.website.data}
+    'website': attendee.website.data,
+    'university': attendee.university.data,
+    'travel_address': attendee.travel_address.data,
+    'software_skills': attendee.software_skills.data,
+    'hardware_skills': attendee.hardware_skills.data,
+    'travel_from_university': attendee.travel_from_university.data
+    }
 
     # check if the user exists already
     # get our db and put the new item in
@@ -192,6 +211,10 @@ def add_new_attendee(attendee):
                'error_response': error_response}
         
         return res        
+
+    # check for "travel_from_university" boolean and set travel_address accordingly:
+    if new_attendee.get('travel_from_university') and new_attendee.get('travel_from_university') == False:
+        new_attendee['travel_address'] = new_attendee.get('university')
 
     # Need to check for empties since DynamoDB complains about empty attributes
     for key, value in new_attendee.iteritems():

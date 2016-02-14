@@ -43,6 +43,9 @@ app.factory('userFactory', ['$http', function($http) {
 // In our controller we get the ID from the URL using ngRoute and $routeParams
 // We pass in $routeParams and our Notes factory along with $scope
 app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFactory', '$http', function($location, $scope, $routeParams, userFactory, $http) {
+    // define home_location as true initially to hide input box
+    $scope.user = {};
+    $scope.user.travel_from_university = true;
     $scope.ethnicity_choices = {
         opt_out: 'I prefer not to answer',
         asian: 'Asian',
@@ -72,9 +75,12 @@ app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFact
         .success(function (attendee) {
             console.log(attendee.message);
             if (attendee.message == 'user_exists') {
-                $location.path('/exists/registered')
-            }; 
-            $location.path('/thanks/registering')
+                $location.path('/exists/registered');
+            } else if (attendee.message == 'Added user') {
+                $location.path('/thanks/registering');
+            } else {
+                alert('Could not submit form. Please try again!')
+            };            
         })
         .error(function (error) {
             alert(error);

@@ -10,7 +10,6 @@ app = angular.module('myApp.thanks', ['ngRoute'])
 }]);
 
 // In our controller we get the ID from the URL using ngRoute and $routeParams
-// We pass in $routeParams and our Notes factory along with $scope
 app.controller('ThanksCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
     $scope.action = $routeParams.action
 

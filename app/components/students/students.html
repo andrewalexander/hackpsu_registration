@@ -3,43 +3,49 @@
 </div>
 <div ng-controller="StudentsCtrl">
     <div class="row">
-        <div class="col-md-12 col-xs-12">
-            <div class="well">
-                <form name="userForm" class="simple-form">
-                    <label for="first_name"> First Name/Friendly Name *</label><br/>
-                        <input type="text" id="first_name" ng-model="user.first_name"  required/><br>
-                    <label for="last_name"> Last Name/Family Name *</label><br>
+        <form name="userForm" class="simple-form">
+            <div class="col-md-12">
+                <div class="well">
+                    <label for="first_name"> First Name/Friendly Name *</label>
+                        <input type="text" id="first_name" ng-model="user.first_name" ng-minlength="3" required/><br>
+
+                    <label for="last_name"> Last Name/Family Name *</label>
                         <input type="text" id="last_name" ng-model="user.last_name" required/><br>
 
-                    <!-- Need to handle the non-EDU stuff. Checkbox? Have them do something after? -->
-                    <label for="email"> Email (must be a .edu email) *</label><br>
+                    <label for="email"> Email (must be a .edu email) *</label>
                         <input type="email" id="email" ng-model="user.email" required/><br>
                         <input type="checkbox" id="no_edu" ng-model="user.no_edu"/> I don't have a .edu email<br>
+                    
+                    <label for="university"> University you attend *</label>
+                        <input type="text" id="university" ng-model="user.university" required/><br>
 
-                     <label for="github"> GitHub URL</label><br/>
-                        <input type="text" id="github" ng-model="user.github"/><br>
+                    <label for="travel_from_university"> Are you travelling from your university? *</label>
+                        <input type="radio" id="travel_from_university" ng-model="user.travel_from_university" name="travel_from_university" data-ng-value="true" required/>Yes
+                        <input type="radio" id="travel_from_university" ng-model="user.travel_from_university" name="travel_from_university" data-ng-value="false" required/>No<br>
+                        <label for="travel_address" ng-if="user.travel_from_university == false">Enter the address you will be travelling from</label>
+                        <input ng-if="user.travel_from_university == false" type="text" id="travel_address" ng-model="user.travel_address"/>
 
-                    <label for="linkedin"> LinkedIn URL</label><br/>
-                        <input type="text" id="linkedin" ng-model="user.linkedin"/><br>
+                    <label for="software_skills"> What software languages/frameworks/services are you familiar with? (Nodejs, Python, Angular, AWS, Azure, Heroku, etc.)</label>
+                        <input type="text" id="software_skills" ng-model="user.software_skills"/>
 
-                    <label for="website"> Website URL</label><br/>
-                        <input type="text" id="website" ng-model="user.website"/><br>
+                    <label for="hardware_skills"> What hardware platforms/concepts are you familiar with? (RaspberryPi, BeagleBone, circuit design, communications protocols, etc.) </label>
+                        <input type="text" id="hardware_skills" ng-model="user.hardware_skills"/>
 
-                    <br>
+                     <label for="github"> GitHub URL</label>
+                        <input type="text" id="github" ng-model="user.github"/>
 
-                    <!-- How do we get it to auto-format like all the fancy sites? -->
+                    <label for="linkedin"> LinkedIn URL</label>
+                        <input type="text" id="linkedin" ng-model="user.linkedin"/>
+
+                    <label for="website"> Website URL</label>
+                        <input type="text" id="website" ng-model="user.website"/>
+
                     <label for="cell"> Cell Phone *</label>
                         <input type="number" id="cell" min="0" max="9999999999" name="cell" ng-model="user.cell" required/>
-                    
-                    <div class=divider></div>
                     
                     <label for="age"> Age *</label>
                         <input type="number" id="age" ng-model="user.age" min="10" max="130" required/>
                         
-                    <div class=divider></div>
-
-                    <br>
-
                     <label for="year"> Year in School *</label>
                         <select name="year" id="year" ng-model="user.year" required>
                             <option value=0>High School</option>
@@ -50,73 +56,64 @@
                             <option value=5>Fifth Year</option>
                             <option value=6>Graduate</option>
                         </select>
-                    
-                    <div class=divider></div>
 
-                    <!-- Should this be a radio button instead? -->
                     <label for="shirt_size"> Shirt Size *</label>
                         <select name="shirt_size" id="shirt_size" ng-model="user.shirt_size" required>
-                            <option value="s">Small</option>
-                            <option value="m">Medium</option>
-                            <option value="l">Large</option>
-                            <option value="xl">Xtra Large</option>
-                            <option value="2xl">2XL</option>
-                            <option value="3xl">3XL</option>
-                            <option value="4xl">4XL</option>
+                            <option value="f_s">Fitted Small</option>
+                            <option value="f_m">Fitted Medium</option>
+                            <option value="f_l">Fitted Large</option>
+                            <option value="f_xl">Fitted XL</option>
+                            <option value="f_2xl">Fitted 2XL</option>
+                            <option value="f_3xl">Fitted 3XL</option>
+                            <option value="f_4xl">Fitted 4XL</option>
+                            <option value="u_s">Unisex Small</option>
+                            <option value="u_m">Unisex Medium</option>
+                            <option value="u_l">Unisex Large</option>
+                            <option value="u_xl">Unisex XL</option>
+                            <option value="u_2xl">Unisex 2XL</option>
+                            <option value="u_3xl">Unisex 3XL</option>
+                            <option value="u_4xl">Unisex 4XL</option>
                         </select>
 
-                    <div class=divider></div>
-                    
                     <label for="gender"> Gender </label>
                         <select name="gender" id="gender" ng-model="user.gender">
                             <option value="female">Female</option>
                             <option value="male">Male</option>
-                            <option value="trans">Transgender</option>
-                            <option value="androgynous">Androgynous</option>
+                            <option value="other">Other</option>
                         </select>
 
-                    <br><br>
-
-                    <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply) </label><br>
-                        <div class="col-md-6 col-xs-6" ng-repeat="(key, text) in ethnicity_choices">
+                    <label for="ethnicity"> How do you identify racially/ethnically? (select all that apply) </label>
+                        <div class="col-md-6" ng-repeat="(key, text) in ethnicity_choices">
                             <input type="checkbox" checklist-model="user.ethnicity" checklist-value="key"> {{text}}
                             
                             <div class=divider></div>
                         </div>
 
-                    <label for="dietary"> Any Dietary Restrictions? (select all that apply)</label><br>
-                        <div class="col-md-6 col-xs-6" ng-repeat="(key, text) in dietary_choices">
+                    <label for="dietary"> Any Dietary Restrictions? (select all that apply)</label>
+                        <div class="col-md-6" ng-repeat="(key, text) in dietary_choices">
                             <input type="checkbox" checklist-model="user.dietary" checklist-value="key"> {{text}}
                         
                             <div class=divider></div>
                         
                         </div>
-
-                    <br>
-                    <div class="col-md-6 col-xs-6">
-                        Other: 
-                        <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
-                    </div>
+                        <div class="col-md-6">
+                            Other: 
+                            <input type="text" id="other_dietary" ng-model="user.other_dietary" /><br>
+                        </div>
 
                     <label for="reimbursement"> Need Reimbursement? *</label>
                         <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/>Yes
                         <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/>No
 
-                    <div class=divider></div>
-
                     <label for="first"> First Hackathon? </label>
                         <input type="radio" id="first" ng-model="user.first" data-ng-value="true"/>Yes
                         <input type="radio" id="first" ng-model="user.first" data-ng-value="false"/>No
-
-                    <br>
-
-                    <button ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
-                    <!-- <button type="submit" ng-click="send()"> Send </button> -->
-                </form>
+                    <center>
+                    <button class="btn btn-default" ng-disabled="userForm.$invalid" type="submit" ng-click="send()"> Send </button>
+                    </center>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
-        
-  
   <!-- <pre>user = {{user | json}}</pre> -->
 </div>
