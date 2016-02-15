@@ -28,3 +28,31 @@
   content: "";
   padding: 0;
 }
+
+label {
+  margin:10px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px
+}
+form div {
+  background-color: #CCFFFF;
+  padding:30px;
+  margin-top:20px;
+  border-radius: 10px
+}
+input {
+  border-radius: 5px;
+  padding:8px;
+  border: 2px #DDDDDD solid;
+}
+select {
+  border-radius: 5px;
+  padding:8px;
+  border: 2px #DDDDDD solid;
+}
+
+h3 span {
+  padding:20px;
+  
+  background-color: red;
+}
