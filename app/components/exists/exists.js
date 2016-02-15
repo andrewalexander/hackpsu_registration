@@ -4,7 +4,7 @@ app = angular.module('myApp.exists', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/exists/:action', {
-    templateUrl: 'components/exists/exists.html',
+    templateUrl: 'app/components/exists/exists.html',
     controller: 'ExistsCtrl'
   });
 }]);
@@ -15,7 +15,7 @@ app.controller('ExistsCtrl', ['$scope', '$routeParams', function($scope, $routeP
     if ($routeParams.action =="rsvp") {
     	$scope.action = "RSVPed"
     } else {
-    	$scope.action = $routeParams.action	
+    	$scope.action = "registered"
     }
     
 

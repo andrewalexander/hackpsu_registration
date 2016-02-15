@@ -56,3 +56,7 @@ h3 span {
   
   background-color: red;
 }
+
+label {
+  width: 100%;
+}

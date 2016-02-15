@@ -4,7 +4,7 @@ app = angular.module('myApp.admin', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/admin', {
-    templateUrl: 'components/admin/admin.html',
+    templateUrl: 'app/components/admin/admin.html',
     controller: 'AdminCtrl'
   });
 }]);

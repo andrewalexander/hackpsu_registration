@@ -47,7 +47,7 @@ def submit():
     if request.method == 'POST':
         # validate the form before we do anything else
         form = scripts.validate_registration_field(request.data)
-    if form:
+    if form and not form.errors:
         # now that it's good, add it to the database
         response = scripts.add_new_attendee(form)
         
@@ -62,7 +62,7 @@ def submit():
 
         # build response to database update
         if response and response.get('aws_response', {}).get('ResponseMetadata', {}).get('HTTPStatusCode', 0) == 200:
-            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user ' + response.get('new_attendee').get('email')})
+            tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Added user'})
             resp = flask.make_response(tmp, 200)
 
             # now start a background process to send the email out, passing in hash
@@ -75,8 +75,11 @@ def submit():
         else:
             tmp = jsonify({'HTTPStatusCode': 500, 'message': 'Failed to update database'})
             resp = flask.make_response(tmp, 500)
-    else:
+    elif form and form.errors:
         tmp = jsonify({'HTTPStatusCode': 400, 'message': form.errors})
+        resp = flask.make_response(tmp, 400)
+    else:
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': 'Failed to validate form'})
         resp = flask.make_response(tmp, 400)
     
     return resp
@@ -117,4 +120,4 @@ def send_email(*args, **kwargs):
     scripts.send_registration_email(form)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
