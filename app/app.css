@@ -28,17 +28,59 @@
   content: "";
   padding: 0;
 }
-
-label {
-  margin:10px 0;
-  text-transform: uppercase;
-  letter-spacing: 2px
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
 }
-form div {
-  /*background-color: #CCFFFF;*/
-  /*padding:30px;*/
-  margin-top:20px;
-  border-radius: 10px
+
+.jumbotron {
+  background-color: #CCFFFF
+}
+.well {
+  background-color: #CCFFFF
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+}
+/*=========== HOME =============  */
+#navigation-buttons {
+  text-align: center;
+}
+#navigation-buttons a {
+  margin:5px;
+  background-color: #3399CC;
+  border-radius: 0px;
+  letter-spacing: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 2px solid #FFFFFF;
+  transition: linear .5s;
+} #navigation-buttons a:hover {
+  border: 2px solid #ffcc66;
+  transition: linear .1s;
+}
+.headline {
+  text-align: center;
+}
+.lead {
+  text-align: center;
+  margin-top: -30px
+}
+.logo {
+  text-align: center;
+}
+.logo img {
+  max-width: 250px;
+}
+/*============ FORM =============*/
+label {
+  margin:20px 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display:block;
 }
 input {
   border-radius: 5px;
@@ -49,20 +91,57 @@ select {
   border-radius: 5px;
   padding:8px;
   border: 2px #DDDDDD solid;
+  background-color: white;
 }
 
-h3 span {
-  padding:20px;
-  
+.explain {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+
+}
+.radio-button {
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: 0; 
+  display:inline-block;
+  padding:7px;
+  border: 2px #DDDDDD solid;
+  border-radius: 5px;
+  margin: 2px;
+  width:230px;
+  transition: linear .2s;
+} .radio-button:hover{
+  background-color: #DDDDDD;
+  transition: linear .2s;
+}
+.form-section {
+  display:block;
+  margin-top:20px;
+}
+.form-section > label {
+
+}
+.spacer {
+  height:150px;
+}
+.selected {
   background-color: red;
 }
+#send-button {
+  padding:30px;
+  margin:30px;
+  color:white;
+  background-color: #3399CC;
+  text-transform: uppercase;
+  border: 2px solid #FFFFFF;
+  border-radius: 0px;
+  letter-spacing: 5px;
+  font-weight: 600;
 
-label {
-  width: 100%;
+} #send-button:hover {
+  :hover {
+  border: 2px solid #ffcc66;
+  transition: linear .1s;
 }
 
-.divider{
-    width:5px;
-    height:auto;
-    display:inline-block;
-}
