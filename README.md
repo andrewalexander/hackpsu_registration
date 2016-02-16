@@ -24,7 +24,8 @@ ps aux | grep python
 # Output:
 ec2-user  2847  0.0  2.4 239508 25208 ?        S    00:52   0:01 python server.py
 ec2-user  3310  0.2  1.3 199052 13372 pts/1    S    02:20   0:00 python -m SimpleHTTPServer
-           ^ This is the PID
+ec2-user  3312  0.0  0.2 110456  2220 pts/1    S+   02:20   0:00 grep --color=auto python
+           ^ This is the PID column
 ```
 
 Your output will look slightly different on a mac, but the number is still in the same place. Now that you have the PID, kill them both. Following our example above:
