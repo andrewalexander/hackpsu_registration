@@ -1,5 +1,5 @@
 curl -O https://bootstrap.pypa.io/get-pip.py
-sudo python2 get-pip.py
+sudo python get-pip.py
 sudo -HE pip install virtualenv
 git clone https://github.com/andrewalexander/hackpsu_registration
 cd hackpsu_registration
@@ -7,7 +7,7 @@ mkdir -p ~/envs/
 virtualenv ~/envs/hackpsu
 source ~/envs/hackpsu/bin/activate
 pip install -r requirements.txt
-sudo -HE brew install node
+brew install node
 sudo -HE npm install -g bower
 sudo -HE npm install 
 python -m SimpleHTTPServer &
