@@ -44,6 +44,7 @@ class RegistrationForm(Form):
     software_skills = StringField('Software skills/frameworks', [validators.Length(min=2, max=150), validators.Optional()])
     hardware_skills = StringField('Hardware skills', [validators.Length(min=2, max=150), validators.Optional()])
     travel_from_university = BooleanField('Travelling from university', [validators.Optional()])
+    mlh_coc         = BooleanField('No .edu email', [validators.Optional()])
 
 class RsvpForm(Form):
     email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
@@ -109,6 +110,7 @@ def get_attendees():
                 'software_skills': entry.get('software_skills', {}).get('S', ''),
                 'hardware_skills': entry.get('hardware_skills', {}).get('S', ''),
                 'travel_from_university': entry.get('travel_from_university', {}).get('BOOL', ''),
+                'mlh_coc': entry.get('mlh_coc', {}).get('BOOL', ''),
                 })
         return all_users
     else:
@@ -197,7 +199,8 @@ def add_new_attendee(attendee):
     'travel_address': attendee.travel_address.data,
     'software_skills': attendee.software_skills.data,
     'hardware_skills': attendee.hardware_skills.data,
-    'travel_from_university': attendee.travel_from_university.data
+    'travel_from_university': attendee.travel_from_university.data,
+    'mlh_coc': attendee.mlh_coc.data
     }
 
     # check if the user exists already

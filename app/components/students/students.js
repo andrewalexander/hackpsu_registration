@@ -42,7 +42,7 @@ app.factory('userFactory', ['$http', function($http) {
 
 // In our controller we get the ID from the URL using ngRoute and $routeParams
 // We pass in $routeParams and our Notes factory along with $scope
-app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFactory', '$http', function($location, $scope, $routeParams, userFactory, $http) {
+app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFactory', '$http', '$window', function($location, $scope, $routeParams, userFactory, $http, $window) {
     // define home_location as true initially to hide input box
     $scope.user = {};
     $scope.user.travel_from_university = true;
@@ -86,5 +86,11 @@ app.controller('StudentsCtrl', ['$location', '$scope', '$routeParams', 'userFact
             alert(error);
             console.log('Bad request: ' + JSON.stringify(error));
         });
+    };
+
+    $scope.url = '';
+    $scope.openCOC = function() {
+        $scope.url = 'http://static.mlh.io/docs/mlh-code-of-conduct.pdf';
+        return true;
     };
 }]);
