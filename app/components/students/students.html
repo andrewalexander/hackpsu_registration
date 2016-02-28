@@ -21,6 +21,14 @@
                             <span class='explain'>must be a .edu email</span></label>
                             <input type="email" id="email" ng-model="user.email" required/><br>
                             <input type="checkbox" id="no_edu" ng-model="user.no_edu"/> I don't have a .edu email<br>
+
+                        <label for="reimbursement"> Need Reimbursement? *</label>
+                            <label class="radio-button">
+                                <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/> Yes
+                            </label>
+                            <label class="radio-button">
+                                <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/> No
+                            </label>
                         
                         <label for="university"> University you attend *</label>
                             <input type="text" id="university" ng-model="user.university" required/><br>
@@ -32,7 +40,7 @@
                             <label class="radio-button">
                                 <input type="radio" id="travel_from_university" ng-model="user.travel_from_university" name="travel_from_university" data-ng-value="false" required/> No
                             </label>
-                            <label for="travel_address" ng-if="user.travel_from_university == false">Enter the address you will be travelling from</label>
+                            <label for="travel_address" ng-if="user.travel_from_university == false">Enter the zip code you will be travelling from so we can calculate reimbursement amounts</label>
                             <input ng-if="user.travel_from_university == false" type="text" id="travel_address" ng-model="user.travel_address"/>
                     </div>
 
@@ -78,7 +86,7 @@
                                     <input type="checkbox" checklist-model="user.dietary" checklist-value="key"> {{text}}
                                 </label>
                             
-                            
+
                             </div>
             
                             Other: 
@@ -119,13 +127,6 @@
                         <label for="cell"> Cell Phone *</br>
                             <span class='explain'>We will be using text alerts during the event!</span> </label>
                             <input type="number" id="cell" min="0" max="9999999999" name="cell" ng-model="user.cell" required/>
-                        <label for="reimbursement"> Need Reimbursement? *</label>
-                            <label class="radio-button">
-                                <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="true" required/> Yes
-                            </label>
-                            <label class="radio-button">
-                                <input type="radio" id="reimbursement" ng-model="user.reimbursement" name="reimbursement" data-ng-value="false" required/> No
-                            </label>
 
                         <label for="first"> First Hackathon? </label>
                             <label class="radio-button">
