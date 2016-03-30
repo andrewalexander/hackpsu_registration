@@ -1,5 +1,33 @@
-<div class="jumbotron">
-   <h1>HackPSU Registration</h1>
-</div>
-<div>Placeholder</div>
+<div ng-controller="AdminCtrl">
+    
+    <label>Emails from DB:</label>
+    <div >
+    
+    <textarea>{{attendee_emails}}</textarea>
+    </div>
+    <form name="getAllAttendees" class="simple-form">
+        <button type="submit" ng-click="get_attendees()"> Get All Attendees </button>
+   </form>
+    
+    <form name="emailForm" class="simple-form">
+        <label for="subject">Subject:</label><br>
+            <input type="text" id="subject" ng-model="email.subject" required/><br>
+        <label for="individual_bool"> Send to Individual or All Attendees? </label>
+	        <label class="radio-button">
+	            <input type="radio" id="individual_bool" ng-model="email.individual_bool" name="individual_bool" data-ng-value="true" required/> Individual
+	        </label>
+	        <label class="radio-button">
+	            <input type="radio" id="individual_bool" ng-model="email.individual_bool" name="individual_bool" data-ng-value="false" required/> All Attendees
+	        </label>
+        <label for="individual_email" ng-if="email.individual_bool == true">Enter the Email of the Desired Receipient</label>
+        	<input ng-if="email.individual_bool == true" type="text" id="individual_email" ng-model="email.individual_email"/>
+        <label for="from_address">Email to Send From</label><br>
+            <input type="text" id="from_address" ng-model="email.from_address" required/>@hackpsu.org<br>
+        <label for="Body">Body:</label><br>
+            <textarea id="body" ng-model="email.body" required> </textarea><br>
+        </label>
+        
 
+        <button ng-disabled="emailForm.$invalid" type="submit" ng-click="send()"> Send </button>
+   </form>
+</div>

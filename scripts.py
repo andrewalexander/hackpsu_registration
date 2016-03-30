@@ -47,10 +47,34 @@ class RegistrationForm(Form):
     mlh_coc         = BooleanField('No .edu email', [validators.Optional()])
 
 class RsvpForm(Form):
-    email        = StringField('Email Address', [validators.Email(), validators.InputRequired()])
-    cell         = IntegerField('Cell Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
-    user_id      = StringField('User ID', [validators.Length(min=36, max=36), validators.InputRequired()])
+    email           = StringField('Email Address', [validators.Email(), validators.InputRequired()])
+    cell            = IntegerField('Cell Phone', [validators.NumberRange(min=0, max=9999999999), validators.InputRequired()])
+    user_id         = StringField('User ID', [validators.Length(min=36, max=36), validators.InputRequired()])
 
+class EmailForm(Form):
+    subject         = StringField('Email Subject', [validators.Length(min=1, max=100), validators.InputRequired()])
+    individual_bool = BooleanField('Send to Individual', [validators.Optional()])
+    individual_email= StringField('Email of Individual', [validators.Email(), validators.Optional()])
+    from_address    = StringField('Email Sender', [validators.Email(), validators.InputRequired()])
+    body            = StringField('Body of Email', [validators.InputRequired()])
+
+
+def convert_to_json(item):
+    pretty_json = {}
+
+    for key, value in item.iteritems():
+        pretty_json.update({key: v for k, v in value.iteritems()})
+    return pretty_json
+
+# Helper class to convert a DynamoDB item to JSON.
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if o % 1 > 0:
+                return float(o)
+            else:
+                return int(o)
+        return super(DecimalEncoder, self).default(o)
 
 def validate_registration_field(attendee):
     wtforms_json.init()
@@ -71,6 +95,17 @@ def validate_rsvp_field(form):
         print 'validation errors:'
         print form.errors
 
+def validate_email_field(form):
+    wtforms_json.init()
+
+    form = EmailForm.from_json(json.loads(form))
+    if form.validate():
+        return form
+    else:
+        print 'validation errors:'
+        print form.errors
+        return form
+
 
 def config_db():
     pass
@@ -82,36 +117,41 @@ def get_attendees():
     all_users = []
 
     response = client.scan(TableName=config.db_name)
+    # response = client.get_item(TableName=config.db_name, Key = {'email': { 'S': 'ooe4@rutgers.edu'}})
+
     
     if response and response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
         for entry in response.get('Items'):
-            all_users.append({
-                'first_name': entry.get('first_name', {}).get('S', ''),
-                'last_name': entry.get('last_name', {}).get('S', ''),
-                'email': entry.get('email', {}).get('S', ''),
-                'age': entry.get('age', {}).get('N', ''),
-                'cell': entry.get('cell', {}).get('N', ''),
-                'year': entry.get('year', {}).get('N', ''),
-                'shirt_size': entry.get('shirt_size', {}).get('S', ''),
-                'reimbursement': entry.get('reimbursement', {}).get('BOOL', ''),
-                'no_edu': entry.get('no_ed', {}).get('BOOL', ''),
-                'gender': entry.get('gender', {}).get('S', ''),
-                'ethnicity': [item.get('S') for item in entry.get('ethnicity', {}).get('L', '')],
-                'dietary': [item.get('S') for item in entry.get('dietary', {}).get('L', '')],
-                'other_dietary': entry.get('other_dietary', {}).get('S', ''),
-                'first': entry.get('first', {}).get('BOOL', ''),
-                'user_id': entry.get('user_id', {}).get('S', ''),
-                'rsvp': entry.get('rsvp', {}).get('BOOL', ''),
-                'github': entry.get('github', {}).get('S', ''),
-                'linkedin': entry.get('linkedin', {}).get('S', ''),
-                'website': entry.get('website', {}).get('S', ''),
-                'university': entry.get('university', {}).get('S', ''),
-                'travel_address': entry.get('travel_address', {}).get('S', ''),
-                'software_skills': entry.get('software_skills', {}).get('S', ''),
-                'hardware_skills': entry.get('hardware_skills', {}).get('S', ''),
-                'travel_from_university': entry.get('travel_from_university', {}).get('BOOL', ''),
-                'mlh_coc': entry.get('mlh_coc', {}).get('BOOL', ''),
-                })
+            # all_users.append({
+            #     'first_name': entry.get('first_name', {}).get('S', ''),
+            #     'last_name': entry.get('last_name', {}).get('S', ''),
+            #     'email': entry.get('email', {}).get('S', ''),
+            #     'age': entry.get('age', {}).get('N', ''),
+            #     'cell': entry.get('cell', {}).get('N', ''),
+            #     'year': entry.get('year', {}).get('N', ''),
+            #     'shirt_size': entry.get('shirt_size', {}).get('S', ''),
+            #     'reimbursement': entry.get('reimbursement', {}).get('BOOL', ''),
+            #     'no_edu': entry.get('no_ed', {}).get('BOOL', ''),
+            #     'gender': entry.get('gender', {}).get('S', ''),
+            #     'ethnicity': [item.get('S') for item in entry.get('ethnicity', {}).get('L', '')],
+            #     'dietary': [item.get('S') for item in entry.get('dietary', {}).get('L', '')],
+            #     'other_dietary': entry.get('other_dietary', {}).get('S', ''),
+            #     'first': entry.get('first', {}).get('BOOL', ''),
+            #     'user_id': entry.get('user_id', {}).get('S', ''),
+            #     'rsvp': entry.get('rsvp', {}).get('BOOL', ''),
+            #     'github': entry.get('github', {}).get('S', ''),
+            #     'linkedin': entry.get('linkedin', {}).get('S', ''),
+            #     'website': entry.get('website', {}).get('S', ''),
+            #     'university': entry.get('university', {}).get('S', ''),
+            #     'travel_address': entry.get('travel_address', {}).get('S', ''),
+            #     'software_skills': entry.get('software_skills', {}).get('S', ''),
+            #     'hardware_skills': entry.get('hardware_skills', {}).get('S', ''),
+            #     'travel_from_university': entry.get('travel_from_university', {}).get('BOOL', ''),
+            #     'mlh_coc': entry.get('mlh_coc', {}).get('BOOL', ''),
+            #     })
+
+            all_users.append(convert_to_json(entry))
+        # print json.dumps(all_users[0], indent=4, cls=DecimalEncoder)
         return all_users
     else:
         return None
@@ -134,15 +174,23 @@ def get_attendee_from_db(attendee_key):
     return res
 
 
-def send_email(email, data):
+def send_email(email, data, sender=None):
     ses = boto3.client('ses', region_name='us-east-1')
     
     with open('./email_templates/destination.json') as destination_file:
         destination = json.load(destination_file)
 
-    destination['ToAddresses'][0] = destination['ToAddresses'][0].format(email=email)
+    if isinstance(email, list):
+        destination['ToAddresses'] = ''
+        destination['BccAddresses'] = email
+    else:
+        destination['ToAddresses'][0] = destination['ToAddresses'][0].format(email=email)
+        destination['BccAddresses'] = ['andrewalex1992@gmail.com']
 
-    source = config.source_email
+    if sender:
+        source = sender
+    else:
+        source = config.source_email
     response = ses.send_email(
         Source=source,
         Destination=destination,
@@ -164,8 +212,17 @@ def send_registration_email(form_data):
     return response
 
 
-def send_emails(attendee_list):
-    pass
+def send_emails(form_data, emails):
+    with open('./email_templates/registration_email.json') as message_file:
+        message = json.load(message_file)
+    
+    message['Subject']['Data'] = form_data['subject']
+    message['Body']['Html']['Data'] = form_data['body']
+    message['Body']['Text']['Data'] = form_data['body']
+
+    response = send_email(emails, message, sender=form_data['from_address'])
+
+    return response
 
 
 def send_alerts(sns_topic):

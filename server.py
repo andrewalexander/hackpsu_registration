@@ -23,6 +23,42 @@ def login(val):
     resp =  flask.make_response((tmp, 200))
     return resp
 
+@app.route('/api/send_email', methods=['POST'])
+def send_generic_email():
+    # val = flask.request.args.get('test')
+    form = scripts.validate_email_field(request.data)
+    if form and not form.errors:
+        if form.individual_bool.data == False:
+            all_users = scripts.get_attendees()
+            email = [item.get('email') for item in all_users]
+        else:
+            email = form.individual_email.data
+        
+        form_data = {
+            'subject': form.subject.data,
+            'individual_bool': form.individual_bool.data,
+            'individual_email': form.individual_email.data,
+            'from_address': form.from_address.data,
+            'body': form.body.data,
+            'email': email
+        }
+        tmp = jsonify({'HTTPStatusCode': 200, 'message': 'Email Sent', 'attendees': email})
+        resp =  flask.make_response((tmp, 200))
+
+        # now start a background process to send the email out, passing in hash
+        jobs = []
+        p = multiprocessing.Process(target=send_generic_email, args=tuple(form_data.items()))
+        jobs.append(p)
+        p.start()
+
+    elif form and form.errors:
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': form.errors})
+        resp = flask.make_response(tmp, 400)
+    else:
+        tmp = jsonify({'HTTPStatusCode': 400, 'message': 'Failed to validate form'})
+        resp = flask.make_response(tmp, 400)
+    return resp
+
 @app.route('/api/users/', methods=['GET'])
 @app.route('/api/users/<id>/', methods=['GET'])
 def profile(id = None): 
@@ -33,7 +69,9 @@ def profile(id = None):
         
     else:
         # get all users from database
-        all_users = scripts.get_attendees()
+        # all_users = scripts.get_attendees()
+        with open('mock_response.json', 'r') as fh:
+            all_users = json.load(fh)
         if all_users:
             tmp = jsonify({'response': all_users})
             resp = flask.make_response(tmp, 200)
@@ -114,10 +152,17 @@ def rsvp():
     return resp
 
 
+def send_generic_email(*args, **kwargs):
+    form = dict(args)
+
+    response = scripts.send_emails(form, form['email'])
+    print response
+
 
 def send_email(*args, **kwargs):
     form = dict(args)
     scripts.send_registration_email(form)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
+    app.run(port=5000)
