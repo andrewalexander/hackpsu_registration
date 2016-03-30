@@ -164,5 +164,5 @@ def send_email(*args, **kwargs):
     scripts.send_registration_email(form)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
     # app.run(port=5000)

@@ -113,7 +113,7 @@ def config_db():
 
 def get_attendees():
     client = None
-    client = boto3.client('dynamodb')
+    client = boto3.client('dynamodb', region_name='us-east-1')
     all_users = []
 
     response = client.scan(TableName=config.db_name)
@@ -154,6 +154,7 @@ def get_attendees():
         # print json.dumps(all_users[0], indent=4, cls=DecimalEncoder)
         return all_users
     else:
+        print 'dynamo error'
         return None
 
 

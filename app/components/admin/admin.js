@@ -17,12 +17,25 @@ app.factory('adminFactory', ['$http', function($http) {
     var config = { 
         headers: 
         {
-            'Access-Control-Allow-Origin': 'True'
+            'Access-Control-Allow-Origin': '52.23.157.234'
         }
     };
 
     adminFactory.getAllAttendees = function () {
-        return $http.get(urlBase + 'users/', config);
+        var res = $http({
+            method: 'GET',
+            url: urlBase + 'users/',
+            // data: JSON.stringify(user),
+            headers: {
+                // 'Content-Type': 'application/json; charset=utf-8',
+                'Access-Control-Allow-Origin': 'True'
+            }
+          });
+
+        console.log('GET /api/users - 200');
+        
+        return res
+        // return $http.get(urlBase + 'users/', config);
     };
     adminFactory.sendEmail = function (email) {
         return $http.post(urlBase + 'send_email', JSON.stringify(email), config);
@@ -55,14 +68,13 @@ app.controller('AdminCtrl', ['$scope', '$routeParams', 'adminFactory', '$http', 
     // $scope.reset();
 
     $scope.get_attendees = function() {
-        var attendees = adminFactory.getAllAttendees()
+        adminFactory.getAllAttendees()
         .success(function (attendees) {
             $scope.attendee_emails = []
             var attendees_from_db = attendees.response
             for (var i = 0; i < attendees_from_db.length; i++) { 
                 $scope.attendee_emails += String(attendees_from_db[i].email) + ',\n';
             }
-            console.log(JSON.stringify($scope.attendee_emails))
             // console.log('Got attendees' + JSON.stringify(attendees));
         })
         .error(function (error) {
