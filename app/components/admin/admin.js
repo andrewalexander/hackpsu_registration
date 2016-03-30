@@ -11,8 +11,8 @@ app = angular.module('myApp.admin', ['ngRoute', 'checklist-model'])
 
 app.factory('adminFactory', ['$http', function($http) {
 
-    // var urlBase = 'http://52.90.183.200:5000/api/';
-    var urlBase = 'http://localhost:5000/api/';
+    var urlBase = 'http://52.23.157.234:5000/api/';
+    // var urlBase = 'http://localhost:5000/api/';
     var adminFactory = {};
     var config = { 
         headers: 

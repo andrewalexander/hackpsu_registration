@@ -69,9 +69,9 @@ def profile(id = None):
         
     else:
         # get all users from database
-        # all_users = scripts.get_attendees()
-        with open('mock_response.json', 'r') as fh:
-            all_users = json.load(fh)
+        all_users = scripts.get_attendees()
+        # with open('mock_response.json', 'r') as fh:
+        #     all_users = json.load(fh)
         if all_users:
             tmp = jsonify({'response': all_users})
             resp = flask.make_response(tmp, 200)
@@ -164,5 +164,5 @@ def send_email(*args, **kwargs):
     scripts.send_registration_email(form)
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000)
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
+    # app.run(port=5000)
